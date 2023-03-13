@@ -74,6 +74,7 @@ Content/__ExternalObjects__/*
 Content/*/Textures/*
 Content/*/Materials/*
 Content/*/Audio/*
+Content/StarterContent/*
 Content/*/MaterialLayers/*
 Content/InfinityBladeEffects/*
 Content/InfinityBladeAdversaries/*
