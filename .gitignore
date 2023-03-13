@@ -73,9 +73,11 @@ Content/__ExternalActors__/*
 Content/__ExternalObjects__/*
 Content/*/Textures/*
 Content/*/Materials/*
+Content/*/Audio/*
+Content/*/MaterialLayers/*
 Content/InfinityBladeEffects/*
 Content/InfinityBladeAdversaries/*
-Content/*/Cues/*
+
 
 # Cache files for the editor to use
 DerivedDataCache/*
