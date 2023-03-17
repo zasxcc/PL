@@ -25,6 +25,9 @@ private:
 	FVector Velocity = FVector::ZeroVector;
 
 	UPROPERTY(VisibleAnywhere,Category=PL)
+	bool HasVelocity = false;
+
+	UPROPERTY(VisibleAnywhere,Category=PL)
 	float CharacterSpeed = 0.0f;
 
 	UPROPERTY(VisibleAnywhere,Category=PL)
@@ -35,9 +38,24 @@ private:
 	
 	UPROPERTY(VisibleAnywhere,Category=PL)
 	float Direction = 0.0f;
+
+	UPROPERTY(VisibleAnywhere,Category=PL)
+	bool HasAccelerate = false;
+
+
 	
 	
 public:
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=PL)
+	float DistanceSinceLastUpdate = 0.0f;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=PL)
+	FVector CurrentWorldLocation;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=PL)
+	float DisplacementSpeed = 0.0f;
+	
 	/*BeginPlay*/
 	virtual void NativeBeginPlay() override;
 
@@ -85,6 +103,36 @@ public:
 	float GetDirection() const
 	{
 		return Direction;
+	}
+	
+	UFUNCTION(BlueprintPure, Category=PL, meta=(BlueprintThreadSafe))
+	bool GetIsAccelerate() const
+	{
+		return HasAccelerate;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL, meta=(BlueprintThreadSafe))
+	float GetDistanceSinceLastUpdate() const
+	{
+		return DistanceSinceLastUpdate;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL, meta=(BlueprintThreadSafe))
+	FVector GetCurrentWorldLocation() const
+	{
+		return CurrentWorldLocation;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL, meta=(BlueprintThreadSafe))
+	float GetDisplacementSpeed() const
+	{
+		return DisplacementSpeed;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL, meta=(BlueprintThreadSafe))
+	bool GetHasVelocity() const
+	{
+		return HasVelocity;
 	}
 	////Setter, Getter End/////
 	

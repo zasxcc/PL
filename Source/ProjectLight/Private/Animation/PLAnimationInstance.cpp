@@ -2,9 +2,9 @@
 
 
 #include "Animation/PLAnimationInstance.h"
-
 #include "Character/PLCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void UPLAnimationInstance::NativeBeginPlay()
 {
@@ -69,6 +69,38 @@ void UPLAnimationInstance::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			Direction = 0.0f;
 		}
+
+		//Update HasVelocity
+		FVector _2dVector;
+		_2dVector.X = 1.0f;
+		_2dVector.Y = 1.0f;
+		_2dVector.Z = 0.0f;
+		if(UKismetMathLibrary::Vector_IsNearlyZero(Velocity*_2dVector))
+		{
+			HasVelocity = false;
+		}
+		else
+		{
+			HasVelocity = true;
+		}
+
+		//Update HasAccelerate
+		if(UKismetMathLibrary::Vector_IsNearlyZero(GetOwnerPLCharacter()->GetCharacterMovement()->GetCurrentAcceleration() * _2dVector))
+		{
+			HasAccelerate = false;
+		}
+		else
+		{
+			HasAccelerate = true;
+		}
+
+		//Update Distance Since Last Frame
+		// const FVector _vectorDistance = GetOwnerPLCharacter()->GetActorLocation() - GetCurrentWorldLocation();
+		// DistanceSinceLastUpdate = UKismetMathLibrary::VSizeXY(_vectorDistance);
+		// CurrentWorldLocation = GetOwnerPLCharacter()->GetActorLocation();
+
+		//Update Displacement Speed
+		//DisplacementSpeed = UKismetMathLibrary::SafeDivide(DistanceSinceLastUpdate, GetDeltaSeconds());	
 	}
 	
 }
