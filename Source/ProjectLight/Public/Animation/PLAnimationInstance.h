@@ -9,6 +9,17 @@
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class EDirection : uint8
+{
+	EForward = 0	UMETA(DisplayName = "Forward"),
+	EBackward = 1   UMETA(DisplayName = "Backward"),
+	ELeft = 2		UMETA(DisplayName = "Left"),
+	ERight = 3		UMETA(DisplayName = "Right"),
+};
+
+
 UCLASS()
 class PROJECTLIGHT_API UPLAnimationInstance : public UAnimInstance
 {
