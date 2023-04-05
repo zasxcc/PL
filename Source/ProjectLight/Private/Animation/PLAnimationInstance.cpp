@@ -93,14 +93,6 @@ void UPLAnimationInstance::NativeUpdateAnimation(float DeltaSeconds)
 		{
 			HasAccelerate = true;
 		}
-
-		//Update Distance Since Last Frame
-		// const FVector _vectorDistance = GetOwnerPLCharacter()->GetActorLocation() - GetCurrentWorldLocation();
-		// DistanceSinceLastUpdate = UKismetMathLibrary::VSizeXY(_vectorDistance);
-		// CurrentWorldLocation = GetOwnerPLCharacter()->GetActorLocation();
-
-		//Update Displacement Speed
-		//DisplacementSpeed = UKismetMathLibrary::SafeDivide(DistanceSinceLastUpdate, GetDeltaSeconds());	
 	}
 	
 }

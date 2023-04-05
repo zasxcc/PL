@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimSingleNodeInstance.h"
+#include "Engine/DataTable.h"
 #include "PLAnimationInstance.generated.h"
 
 /**
@@ -18,6 +20,8 @@ enum class EDirection : uint8
 	ELeft = 2		UMETA(DisplayName = "Left"),
 	ERight = 3		UMETA(DisplayName = "Right"),
 };
+
+
 
 
 UCLASS()
@@ -52,12 +56,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere,Category=PL)
 	bool HasAccelerate = false;
-
-
-	
 	
 public:
+	
 
+
+public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=PL)
 	float DistanceSinceLastUpdate = 0.0f;
 

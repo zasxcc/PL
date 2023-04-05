@@ -2,13 +2,19 @@
 
 
 #include "Character/PLCharacter.h"
+#include "Components//PLStatisticComponent.h"
+#include "GameplayTagContainer.h"
+#include "Animation/PLAnimationInstance.h"
+#include "Components/PLActionManagerComponent.h"
 
 // Sets default values
 APLCharacter::APLCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	StatisticComponent = CreateDefaultSubobject<UPLStatisticComponent>(TEXT("Stat Comp"));
+	ActionManagerComponent = CreateDefaultSubobject<UPLActionManagerComponent>(TEXT("Action Comp"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -31,4 +37,22 @@ void APLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+void APLCharacter::PlayAction(FGameplayTag _actionTag)
+{
+	if(ActionInfo.Contains(_actionTag))
+	{
+		// StoredActionInfo에 재생할 Action과 Montage 저장 
+		ActionManagerComponent->StoredActionInfo = ActionInfo[_actionTag];
+		
+		ActionManagerComponent->ExecuteAction(ActionInfo[_actionTag].PlayAction);
+		PlayAnimMontage(ActionInfo[_actionTag].PlayMontage);
+	}
+}
+
+UPLAnimationInstance* APLCharacter::GetPLAnimationInstance() const
+{
+	return Cast<UPLAnimationInstance>(GetMesh()->GetAnimInstance());
+}
+
 
