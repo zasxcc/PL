@@ -28,11 +28,14 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	class UPLStatisticComponent* StatisticComponent;
+	TObjectPtr<UPLStatisticComponent> StatisticComponent;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	class UPLActionManagerComponent* ActionManagerComponent;
+	TObjectPtr<UPLActionManagerComponent> ActionManagerComponent;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
+	TObjectPtr<UPLCollisionTraceComponent> CollisionTraceComponent;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -55,6 +58,12 @@ public:
 	class UPLActionManagerComponent* GetPLActionComponent() const
 	{
 		return ActionManagerComponent;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL)
+	class UPLCollisionTraceComponent* GetPLCollisionComponent() const
+	{
+		return CollisionTraceComponent;
 	}
 
 	UFUNCTION(BlueprintPure, Category=PL)

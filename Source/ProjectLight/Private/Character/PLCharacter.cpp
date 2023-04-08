@@ -5,6 +5,7 @@
 #include "Components//PLStatisticComponent.h"
 #include "GameplayTagContainer.h"
 #include "Animation/PLAnimationInstance.h"
+#include "Components/PLCollisionTraceComponent.h"
 #include "Components/PLActionManagerComponent.h"
 
 // Sets default values
@@ -14,6 +15,7 @@ APLCharacter::APLCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	StatisticComponent = CreateDefaultSubobject<UPLStatisticComponent>(TEXT("Stat Comp"));
 	ActionManagerComponent = CreateDefaultSubobject<UPLActionManagerComponent>(TEXT("Action Comp"));
+	CollisionTraceComponent = CreateDefaultSubobject<UPLCollisionTraceComponent>(TEXT("Collision Comp"));
 	
 }
 
