@@ -4,22 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "Animation/AnimSingleNodeInstance.h"
-#include "Engine/DataTable.h"
+#include "Game/PLType.h"
 #include "PLAnimationInstance.generated.h"
 
 /**
  * 
  */
 
-UENUM(BlueprintType)
-enum class EDirection : uint8
-{
-	EForward = 0	UMETA(DisplayName = "Forward"),
-	EBackward = 1   UMETA(DisplayName = "Backward"),
-	ELeft = 2		UMETA(DisplayName = "Left"),
-	ERight = 3		UMETA(DisplayName = "Right"),
-};
+
 
 
 

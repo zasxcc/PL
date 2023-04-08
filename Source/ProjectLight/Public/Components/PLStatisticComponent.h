@@ -2,51 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Engine/DataTable.h"
+#include "Game/PLType.h"
 #include "PLStatisticComponent.generated.h"
 
-USTRUCT(BlueprintType)
-struct FPLStatDetail : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	float Value = 100.0f;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	bool IsRegenValue = true;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	float RegenDelay = 1.0f;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	float RegenValue = 5.0f;
-	
-};
-
-USTRUCT(BlueprintType)
-struct FPLStat : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	FPLStatDetail HP;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	FPLStatDetail Stamina;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	FPLStatDetail Resource;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	FPLStatDetail ATK;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	FPLStatDetail DEF;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	float MovementSpeed = 600.0f;
-};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIGHT_API UPLStatisticComponent : public UActorComponent

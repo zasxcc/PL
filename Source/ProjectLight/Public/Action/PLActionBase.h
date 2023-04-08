@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/PLCharacter.h"
 #include "UObject/NoExportTypes.h"
 #include "PLActionBase.generated.h"
 
@@ -16,10 +17,10 @@ class PROJECTLIGHT_API UPLActionBase : public UObject
 
 public:
 	UPROPERTY(BlueprintReadWrite, Category=PL)
-	class APLCharacter* OwnerCharacter;
+	TObjectPtr<APLCharacter> OwnerCharacter;
 
 	UPROPERTY(BlueprintReadWrite, Category=PL)
-	UAnimMontage* PlayMontage;
+	TObjectPtr<UAnimMontage> PlayMontage;
 
 public:
 	/*Called when the action is successfully triggered*/

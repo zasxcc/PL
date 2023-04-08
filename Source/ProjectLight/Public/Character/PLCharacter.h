@@ -3,23 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataTable.h"
 #include "GameFramework/Character.h"
 #include "GameplayTagContainer.h"
+#include "Game/PLType.h"
 #include "PLCharacter.generated.h"
 
 
-USTRUCT(BlueprintType)
-struct FPlayActionInfo : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	class UAnimMontage* PlayMontage = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Instanced, Category = PL)
-	class UPLActionBase* PlayAction = nullptr;
-};
 
 UCLASS()
 class PROJECTLIGHT_API APLCharacter : public ACharacter
