@@ -25,6 +25,12 @@ public:
 
 	UPROPERTY()
 	FTimerHandle CollisionTimerHandle;
+
+	UPROPERTY()
+	TMap<FName, FPLHitActors> AlreadyHitActors;
+
+	UPROPERTY(EditAnywhere, Category=PL_Collision, BlueprintReadWrite)
+	bool bDisplayDebugSphere = false;
 	
 
 protected:

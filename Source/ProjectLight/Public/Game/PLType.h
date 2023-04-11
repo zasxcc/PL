@@ -29,10 +29,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
 	bool IsRegenValue = true;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL, meta=(EditCondition = "IsRegenValue"))
 	float RegenDelay = 1.0f;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL, meta=(EditCondition = "IsRegenValue"))
 	float RegenValue = 5.0f;
 	
 };
@@ -104,4 +104,14 @@ public:
 	//콜리전 활성화 여부
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_Collision)
 	bool bIsActivateCollision = false;
+};
+
+// 콜리전 디텍팅 관련 구조체
+USTRUCT(BlueprintType)
+struct FPLHitActors {
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = ACM)
+	TArray<TObjectPtr<AActor>> AlreadyHitActors;
 };

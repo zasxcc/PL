@@ -21,6 +21,7 @@ void UPLStatisticComponent::BeginPlay()
 
 	// ...
 	GetWorld()->GetTimerManager().SetTimer(StatRegenTimer, this, &UPLStatisticComponent::RegenStat, 0.2f, true);
+	CharacterStat = DefaultCharacterStat; 
 }
 
 

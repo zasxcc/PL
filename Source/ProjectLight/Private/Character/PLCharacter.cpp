@@ -52,6 +52,15 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 	}
 }
 
+float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Purple, TEXT("Take Damage!!"));
+	
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+
 UPLAnimationInstance* APLCharacter::GetPLAnimationInstance() const
 {
 	return Cast<UPLAnimationInstance>(GetMesh()->GetAnimInstance());

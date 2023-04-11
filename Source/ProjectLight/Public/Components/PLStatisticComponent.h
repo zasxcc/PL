@@ -25,7 +25,7 @@ protected:
 	FPLStat DefaultCharacterStat;
 
 	//캐릭터 스텟 [실제값]
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
+	UPROPERTY(BlueprintReadWrite, Category=PL)
 	FPLStat CharacterStat;
 
 	//스텟 리젠 이벤트 타이머

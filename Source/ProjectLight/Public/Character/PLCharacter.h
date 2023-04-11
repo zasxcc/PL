@@ -46,6 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category=PL)
 	void PlayAction(FGameplayTag _actionTag);
 
+	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
 	/*Getter, Setter*/
 	UFUNCTION(BlueprintPure, Category=PL)
@@ -68,6 +70,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category=PL)
 	class UPLAnimationInstance* GetPLAnimationInstance() const;
-	/////////////////
+	////////////////
 	
 };

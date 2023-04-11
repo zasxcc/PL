@@ -4,6 +4,7 @@
 #include "Components/PLCollisionTraceComponent.h"
 
 #include "Character/PLCharacter.h"
+#include "Engine/DamageEvents.h"
 #include "Game/PLType.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -31,6 +32,12 @@ void UPLCollisionTraceComponent::StartCollisionTrace(FName _collisionTraceInfoNa
 {
 	if(CollisionTraceInfo.Contains(_collisionTraceInfoName))
 	{
+		//이미 활성화된 상태라면, 한번 Stop시키고 재활성화
+		if(CollisionTraceInfo[_collisionTraceInfoName].bIsActivateCollision == true)
+		{
+			StopCollisionTrace(_collisionTraceInfoName);
+		}
+		
 		CollisionTraceInfo[_collisionTraceInfoName].bIsActivateCollision = true;
 	}
 }
@@ -40,6 +47,13 @@ void UPLCollisionTraceComponent::StopCollisionTrace(FName _collisionTraceInfoNam
 	if(CollisionTraceInfo.Contains(_collisionTraceInfoName))
 	{
 		CollisionTraceInfo[_collisionTraceInfoName].bIsActivateCollision = false;
+		
+		if(AlreadyHitActors.Contains(_collisionTraceInfoName))
+		{
+			AlreadyHitActors[_collisionTraceInfoName].AlreadyHitActors.Empty();
+			AlreadyHitActors.Remove(_collisionTraceInfoName);
+		}
+		IgnoredActors.Empty();
 	}
 }
 
@@ -78,10 +92,37 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 				const bool bHit = GetWorld()->SweepSingleByObjectType(_hitRes, _startPos, _endPos, _orientation.Quaternion(), _objectParams,
 										FCollisionShape::MakeSphere(CollisionTraceInfo[_collisionTrace.Key].CollisionSize), Params);
 
-				//Debug Sphere
-				FHitResult _debugTraceRes;
-				UKismetSystemLibrary::SphereTraceSingle(GetWorld(), _startPos, _endPos, CollisionTraceInfo[_collisionTrace.Key].CollisionSize,TraceTypeQuery1, false,
+				// Draw Debug Sphere
+				if(bDisplayDebugSphere)
+				{
+					FHitResult _debugTraceRes;
+					UKismetSystemLibrary::SphereTraceSingle(GetWorld(), _startPos, _endPos, CollisionTraceInfo[_collisionTrace.Key].CollisionSize,TraceTypeQuery1, false,
 													  IgnoredActors, EDrawDebugTrace::ForDuration, _debugTraceRes, true);
+				}
+
+				// 콜리전에 걸린 엑터들 처리
+				if(bHit)
+				{
+					if(AlreadyHitActors.Contains(_collisionTrace.Key) == false)
+					{
+						AlreadyHitActors.Add(_collisionTrace.Key);
+					}
+					AlreadyHitActors[_collisionTrace.Key].AlreadyHitActors.AddUnique(_hitRes.GetActor());
+					IgnoredActors.AddUnique(_hitRes.GetActor());
+
+					if(IsValid(_hitRes.GetActor()))
+					{
+						FDamageEvent _damageEvent;
+						if(GetOwner())
+						{
+							_hitRes.GetActor()->TakeDamage(0.0f, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
+						}
+						else
+						{
+							_hitRes.GetActor()->TakeDamage(0.0f, _damageEvent, nullptr, nullptr);
+						}
+					}
+				}
 			}
 		}
 	}
