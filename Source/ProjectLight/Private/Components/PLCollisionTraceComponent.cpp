@@ -24,20 +24,27 @@ void UPLCollisionTraceComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//콜리전 타이머 설정
+	// 콜리전 타이머 설정
 	GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &UPLCollisionTraceComponent::UpdateCollisionTrace, 0.05f, true);
 }
 
-void UPLCollisionTraceComponent::StartCollisionTrace(FName _collisionTraceInfoName)
+void UPLCollisionTraceComponent::StartCollisionTrace(FName _collisionTraceInfoName,  FDamageInfo _damageInfo)
 {
 	if(CollisionTraceInfo.Contains(_collisionTraceInfoName))
 	{
-		//이미 활성화된 상태라면, 한번 Stop시키고 재활성화
+		// 이미 활성화된 상태라면, 한번 Stop시키고 재활성화
 		if(CollisionTraceInfo[_collisionTraceInfoName].bIsActivateCollision == true)
 		{
 			StopCollisionTrace(_collisionTraceInfoName);
 		}
+		// 대미지 정보 Set
+		CollisionTraceInfo[_collisionTraceInfoName].DamageInfo = _damageInfo;
+		if(GetOwner())
+		{
+			CollisionTraceInfo[_collisionTraceInfoName].DamageInfo.DamageCauser = GetOwner();
+		}
 		
+		// 콜리전 활성화
 		CollisionTraceInfo[_collisionTraceInfoName].bIsActivateCollision = true;
 	}
 }
@@ -46,13 +53,16 @@ void UPLCollisionTraceComponent::StopCollisionTrace(FName _collisionTraceInfoNam
 {
 	if(CollisionTraceInfo.Contains(_collisionTraceInfoName))
 	{
+		// 콜리전 비활성화
 		CollisionTraceInfo[_collisionTraceInfoName].bIsActivateCollision = false;
-		
+		CollisionTraceInfo[_collisionTraceInfoName].DamageInfo = FDamageInfo();
+		// AlreadyHitActors 초기화
 		if(AlreadyHitActors.Contains(_collisionTraceInfoName))
 		{
 			AlreadyHitActors[_collisionTraceInfoName].AlreadyHitActors.Empty();
 			AlreadyHitActors.Remove(_collisionTraceInfoName);
 		}
+		// IgnoredActors 초기화
 		IgnoredActors.Empty();
 	}
 }
@@ -88,7 +98,8 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 				{
 					Params.AddIgnoredActors(IgnoredActors);
 				}
-			
+
+				// SweepSingleByObjectType
 				const bool bHit = GetWorld()->SweepSingleByObjectType(_hitRes, _startPos, _endPos, _orientation.Quaternion(), _objectParams,
 										FCollisionShape::MakeSphere(CollisionTraceInfo[_collisionTrace.Key].CollisionSize), Params);
 
@@ -116,6 +127,13 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 						if(GetOwner())
 						{
 							_hitRes.GetActor()->TakeDamage(0.0f, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
+							
+							TObjectPtr<APLCharacter> _hitPLCharacter = Cast<APLCharacter>(_hitRes.GetActor());
+							if(IsValid(_hitPLCharacter))
+							{
+								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.HitLoc = _hitRes.Location;
+								_hitPLCharacter->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+							}
 						}
 						else
 						{

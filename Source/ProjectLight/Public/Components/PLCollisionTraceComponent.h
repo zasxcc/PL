@@ -27,7 +27,7 @@ public:
 	FTimerHandle CollisionTimerHandle;
 
 	UPROPERTY()
-	TMap<FName, FPLHitActors> AlreadyHitActors;
+	TMap<FName, FHitActors> AlreadyHitActors;
 
 	UPROPERTY(EditAnywhere, Category=PL_Collision, BlueprintReadWrite)
 	bool bDisplayDebugSphere = false;
@@ -40,7 +40,7 @@ protected:
 public:
 	//콜리전 스타트
 	UFUNCTION(BlueprintCallable, Category=PL_Collision)
-	void StartCollisionTrace(FName _collisionTraceInfoName);
+	void StartCollisionTrace(FName _collisionTraceInfoName, FDamageInfo _damageInfo);
 
 	//콜리전 스탑
 	UFUNCTION(BlueprintCallable, Category=PL_Collision)

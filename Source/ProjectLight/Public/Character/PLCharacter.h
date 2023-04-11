@@ -23,6 +23,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL)
 	TMap<FGameplayTag, FPlayActionInfo> ActionInfo;
 
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,9 +34,15 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
 	TObjectPtr<UPLActionManagerComponent> ActionManagerComponent;
-
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
 	TObjectPtr<UPLCollisionTraceComponent> CollisionTraceComponent;
+
+
+	
+	// 가장 최근에 받은 대미지 정보
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL)
+	FDamageInfo LastDamageInfo;
 	
 public:	
 	// Called every frame
@@ -67,9 +75,22 @@ public:
 	{
 		return CollisionTraceComponent;
 	}
-
+	
+	UFUNCTION(BlueprintPure, Category=PL)
+		FDamageInfo GetLastDamageInfo() const
+	{
+		return LastDamageInfo;
+	}
+	
 	UFUNCTION(BlueprintPure, Category=PL)
 	class UPLAnimationInstance* GetPLAnimationInstance() const;
+
+	UFUNCTION(BlueprintCallable, Category=PL)
+	void SetLastDamageInfo(FDamageInfo _damageInfo)
+	{
+		LastDamageInfo = _damageInfo;
+	}
+	
 	////////////////
 	
 };

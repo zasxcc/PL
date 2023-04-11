@@ -75,6 +75,33 @@ public:
 	class UPLActionBase* PlayAction = nullptr;
 };
 
+// 대미지 정보
+USTRUCT(BlueprintType)
+struct FDamageInfo
+{
+	GENERATED_BODY()
+public:
+
+	FDamageInfo() :
+	Damage(0.0f),
+	ATK_Ratio(1.0f),
+	DamageCauser(nullptr),
+	HitLoc(FVector::Zero())
+	{};
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_DamageInfo)
+	float Damage = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_DamageInfo)
+	float ATK_Ratio = 1.0f;
+
+	UPROPERTY(BlueprintReadWrite, Category = PL_DamageInfo)
+	TObjectPtr<AActor> DamageCauser = nullptr;
+
+	UPROPERTY(BlueprintReadWrite, Category = PL_DamageInfo)
+	FVector HitLoc = FVector::Zero();
+};
+
 //콜리전 관련 구조체
 USTRUCT(BlueprintType)
 struct FCollisionTraceInfo : public FTableRowBase
@@ -104,14 +131,19 @@ public:
 	//콜리전 활성화 여부
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_Collision)
 	bool bIsActivateCollision = false;
+
+	//대미지 정보
+	UPROPERTY(BlueprintReadWrite, Category = PL_Collision)
+	FDamageInfo DamageInfo;
 };
 
 // 콜리전 디텍팅 관련 구조체
 USTRUCT(BlueprintType)
-struct FPLHitActors {
+struct FHitActors {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = ACM)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = PL_Collision)
 	TArray<TObjectPtr<AActor>> AlreadyHitActors;
 };
+
