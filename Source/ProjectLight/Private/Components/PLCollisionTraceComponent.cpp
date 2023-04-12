@@ -130,7 +130,10 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 							TObjectPtr<UPLStatisticComponent> _hitActorStaticComp = Cast<UPLStatisticComponent>(_hitRes.GetActor()->FindComponentByClass<UPLStatisticComponent>());
 							if(IsValid(_hitActorStaticComp))
 							{
+								// HitLocation 
 								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.HitLoc = _hitRes.Location;
+
+								// 대미지 계산
 								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerCharacter->GetPLStatisticComponent());
 								
 								// 공격당한 엑터가 APLCharacter라면 Set LastDamageInfo 
@@ -140,6 +143,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 								}
 							}
 
+							//대미지 적용
 							_hitRes.GetActor()->TakeDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
 						}
 					}

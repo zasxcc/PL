@@ -11,7 +11,8 @@ APLAICharacter::APLAICharacter()
 void APLAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// 스킬 업데이트 타이머 
 	GetWorld()->GetTimerManager().SetTimer(AiSkillTimerHandle, this, &APLAICharacter::UpdateSkill, 1.0f, true);
 }
 

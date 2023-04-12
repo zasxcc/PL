@@ -32,7 +32,9 @@ void UPLActionManagerComponent::BeginPlay()
 void UPLActionManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if(CurrentAction)
+
+	// 현재 CurrentAction이 nullptr이 아니라면, Tick 함수 실행
+	if(IsValid(CurrentAction))
 	{
 		CurrentAction->OnTick(DeltaTime);
 	}
@@ -53,10 +55,12 @@ void UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
 
 	if(GetPLOwnerCharacter()->GetPLAnimationInstance())
 	{
+		// 몽타주 Delegate 초기화
 		GetPLOwnerCharacter()->GetPLAnimationInstance()->OnMontageStarted.Clear();
 		GetPLOwnerCharacter()->GetPLAnimationInstance()->OnMontageBlendingOut.Clear();
 		GetPLOwnerCharacter()->GetPLAnimationInstance()->OnMontageEnded.Clear();
-		
+
+		// 몽타주 Delegate 재세팅
 		_animInstance->OnMontageStarted.AddDynamic(this, &UPLActionManagerComponent::HandleMontageStarted);
 		_animInstance->OnMontageEnded.AddDynamic(this, &UPLActionManagerComponent::HandleMontageFinished);
 		_animInstance->OnMontageBlendingOut.AddDynamic(this, &UPLActionManagerComponent::HandleMontageBlendingOut);
@@ -88,6 +92,8 @@ void UPLActionManagerComponent::HandleMontageStarted(UAnimMontage* _animMontage)
 void UPLActionManagerComponent::HandleMontageFinished(UAnimMontage* _animMontage, bool _bInterruptted)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("MG Finish"));
+
+	// 정상적 종료라면 ExitAction() 실행
 	if(_bInterruptted == false)
 	{
 		if(CurrentAction)

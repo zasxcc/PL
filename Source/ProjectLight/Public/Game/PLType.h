@@ -6,6 +6,11 @@
 #include "Engine/DataTable.h"
 #include "PLType.generated.h"
 
+#define STAT_ATK FGameplayTag::RequestGameplayTag("Stat.ATK")
+#define STAT_DEF FGameplayTag::RequestGameplayTag("Stat.DEF")
+#define STAT_HP FGameplayTag::RequestGameplayTag("Stat.HP")
+
+
 //방향 Enum
 UENUM(BlueprintType)
 enum class EDirection : uint8
@@ -34,15 +39,27 @@ struct FPLStatDetail : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
+	// 스텟의 최댓값, -1이라면 최댓값이 없음
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
-	float Value = 500.0f;
+	float MaxValue = 500.0f;
 
+	// 스텟의 현재 값
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
+	float Value = MaxValue;
+
+	// 리젠되는 값인가
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
 	bool IsRegenValue = true;
 
+	// 소모시 리젠 딜레이
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL, meta=(EditCondition = "IsRegenValue"))
 	float RegenDelay = 1.0f;
 
+	// 현재 리젠 딜레이 값
+	UPROPERTY()
+	float CurrentRegenDelay = RegenDelay;
+
+	// 초당 리젠 값
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL, meta=(EditCondition = "IsRegenValue"))
 	float RegenValue = 5.0f;
 	

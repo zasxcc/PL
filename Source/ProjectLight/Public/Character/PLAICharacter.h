@@ -19,6 +19,7 @@ public:
 	TArray<FAiCharacterSkillInfo> SkillInfo;
 
 private:
+	// 스킬 관련 타이머
 	UPROPERTY()
 	FTimerHandle AiSkillTimerHandle;
 
@@ -27,9 +28,11 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	// 스킬 관련 타이머 함수
 	UFUNCTION()
 	void UpdateSkill();
 
+	// 스킬 쿨타임 계산 [초당]
 	UFUNCTION()
 	void CalculateSkillColdTime();
 
