@@ -43,21 +43,27 @@ protected:
 	// 가장 최근에 받은 대미지 정보
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL)
 	FDamageInfo LastDamageInfo;
+
+	// 현재 타겟팅한 적
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL)
+	TObjectPtr<APLCharacter> CurrentTargetCharacter;
 	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 	UFUNCTION(BlueprintCallable, Category=PL)
 	void PlayAction(FGameplayTag _actionTag);
 
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	// CurrentTargetCharacter와의 각도 Return
+	UFUNCTION(BlueprintPure, Category=PL)
+	float GetAngleToTarget() const;
 	
-	/*Getter, Setter*/
+	////////////////////////*Getter, Setter*///////////////////////////
+
 	UFUNCTION(BlueprintPure, Category=PL)
 	class UPLStatisticComponent* GetPLStatisticComponent() const
 	{
@@ -81,6 +87,12 @@ public:
 	{
 		return LastDamageInfo;
 	}
+
+	UFUNCTION(BlueprintPure, Category=PL)
+		APLCharacter* GetCurrentTargetCharacter() const
+	{
+		return CurrentTargetCharacter;
+	}
 	
 	UFUNCTION(BlueprintPure, Category=PL)
 	class UPLAnimationInstance* GetPLAnimationInstance() const;
@@ -90,7 +102,13 @@ public:
 	{
 		LastDamageInfo = _damageInfo;
 	}
+
+	UFUNCTION(BlueprintCallable, Category=PL)
+	void SetCurrentTargetCharacter(APLCharacter* _character)
+	{
+		CurrentTargetCharacter = _character;
+	}
 	
-	////////////////
+	//////////////////////////////////////////////////////////////////
 	
 };

@@ -13,5 +13,25 @@ UCLASS()
 class PROJECTLIGHT_API APLAICharacter : public APLCharacter
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	TArray<FAiCharacterSkillInfo> SkillInfo;
+
+private:
+	UPROPERTY()
+	FTimerHandle AiSkillTimerHandle;
+
+public:
+	APLAICharacter();
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void UpdateSkill();
+
+	UFUNCTION()
+	void CalculateSkillColdTime();
+
 	
 };

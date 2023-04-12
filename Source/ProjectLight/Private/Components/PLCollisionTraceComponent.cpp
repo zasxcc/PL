@@ -4,6 +4,7 @@
 #include "Components/PLCollisionTraceComponent.h"
 
 #include "Character/PLCharacter.h"
+#include "Components/PLStatisticComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Game/PLType.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -123,21 +124,23 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 
 					if(IsValid(_hitRes.GetActor()))
 					{
-						FDamageEvent _damageEvent;
 						if(GetOwner())
 						{
-							_hitRes.GetActor()->TakeDamage(0.0f, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
-							
-							TObjectPtr<APLCharacter> _hitPLCharacter = Cast<APLCharacter>(_hitRes.GetActor());
-							if(IsValid(_hitPLCharacter))
+							FDamageEvent _damageEvent;
+							TObjectPtr<UPLStatisticComponent> _hitActorStaticComp = Cast<UPLStatisticComponent>(_hitRes.GetActor()->FindComponentByClass<UPLStatisticComponent>());
+							if(IsValid(_hitActorStaticComp))
 							{
 								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.HitLoc = _hitRes.Location;
-								_hitPLCharacter->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerCharacter->GetPLStatisticComponent());
+								
+								// 공격당한 엑터가 APLCharacter라면 Set LastDamageInfo 
+								if(Cast<APLCharacter>(_hitRes.GetActor()))
+								{
+									Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+								}
 							}
-						}
-						else
-						{
-							_hitRes.GetActor()->TakeDamage(0.0f, _damageEvent, nullptr, nullptr);
+
+							_hitRes.GetActor()->TakeDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
 						}
 					}
 				}

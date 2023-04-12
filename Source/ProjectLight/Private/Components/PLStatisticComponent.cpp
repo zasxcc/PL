@@ -45,6 +45,12 @@ void UPLStatisticComponent::ApplyDamage(float _damage)
 void UPLStatisticComponent::DeadEvent()
 {
 	//Dead Event
+	
+}
+
+float UPLStatisticComponent::CalculateDamage(FDamageInfo _damageInfo,  UPLStatisticComponent* _dealerStaticComp)
+{
+	return 100/(100+CharacterStat.DEF.Value)*(_damageInfo.Damage + _dealerStaticComp->CharacterStat.ATK.Value * _damageInfo.ATK_Ratio);
 }
 
 void UPLStatisticComponent::InitStat()
@@ -56,3 +62,4 @@ void UPLStatisticComponent::RegenStat()
 {
 	
 }
+

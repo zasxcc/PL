@@ -28,6 +28,9 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
 	UFUNCTION(BlueprintPure, Category=PL)
 	UCameraComponent* GetCameraComp() const
 	{

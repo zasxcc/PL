@@ -48,9 +48,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category=PL)
 	void DeadEvent();
 
+	//대미지 계산
+	UFUNCTION(BlueprintCallable, Category=PL)
+	float CalculateDamage(FDamageInfo _damageInfo, UPLStatisticComponent* _dealerStaticComp);
+
 	//스텟 초기화
 	UFUNCTION(BlueprintCallable, Category=PL)
 	void InitStat();
+
+	
 
 		
 };

@@ -33,12 +33,6 @@ void APLCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void APLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
 
 void APLCharacter::PlayAction(FGameplayTag _actionTag)
 {
@@ -52,12 +46,29 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 	}
 }
 
-float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Purple, TEXT("Take Damage!!"));
-	
+	GetPLStatisticComponent()->ApplyDamage(DamageAmount);
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+float APLCharacter::GetAngleToTarget() const
+{
+	if (!GetCurrentTargetCharacter())
+	{
+		return 0.0f;
+	}
+
+	FVector Direction = GetCurrentTargetCharacter()->GetActorLocation() - GetActorLocation();
+	Direction.Normalize();
+
+	// Compute the angle between the two vectors
+	const float DotProduct = FVector::DotProduct(GetActorForwardVector(), Direction);
+
+	// Convert the angle from radians to degrees
+	const float AngleInDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
+
+	return AngleInDegrees;
 }
 
 
