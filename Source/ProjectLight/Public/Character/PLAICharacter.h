@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/PLCharacter.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "PLAICharacter.generated.h"
 
 /**
@@ -15,6 +16,9 @@ class PROJECTLIGHT_API APLAICharacter : public APLCharacter
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	UAIPerceptionStimuliSourceComponent* AiPerceptionStimuliSourceComp;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TArray<FAiCharacterSkillInfo> SkillInfo;
 
@@ -35,6 +39,10 @@ public:
 	// 스킬 쿨타임 계산 [초당]
 	UFUNCTION()
 	void CalculateSkillColdTime();
+
+
+	UFUNCTION(BlueprintPure, Category=PL_AiCharacter)
+	float GetDistanceFromCurrentTarget() const;
 
 	
 };

@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "Animation/PLAnimationInstance.h"
 #include "Components/PLCollisionTraceComponent.h"
+#include <random>
 #include "Components/PLActionManagerComponent.h"
 
 // Sets default values
@@ -71,6 +72,14 @@ float APLCharacter::GetAngleToTarget() const
 	return AngleInDegrees;
 }
 
+
+int APLCharacter::GetRandomInt(int _min, int _max)
+{
+	std::random_device _rd;
+	std::uniform_int_distribution<int> _dist(_min, _max);
+
+	return _dist(_rd);
+}
 
 UPLAnimationInstance* APLCharacter::GetPLAnimationInstance() const
 {

@@ -10,7 +10,6 @@
 #define STAT_DEF FGameplayTag::RequestGameplayTag("Stat.DEF")
 #define STAT_HP FGameplayTag::RequestGameplayTag("Stat.HP")
 
-
 //방향 Enum
 UENUM(BlueprintType)
 enum class EDirection : uint8
@@ -21,11 +20,11 @@ enum class EDirection : uint8
 	ERight	  = 3	UMETA(DisplayName = "Right"),
 };
 
-//방향 Enum
+//상태 Enum
 UENUM(BlueprintType)
 enum class ECharacterState : uint8
 {
-	ENormal = 0		UMETA(DisplayName = "Normal"),
+	EIdle = 0		UMETA(DisplayName = "Idle"),
 	EPatrol = 1		UMETA(DisplayName = "Patrol"),
 	ECombat = 2		UMETA(DisplayName = "Combat"),
 	EGroggy = 3		UMETA(DisplayName = "Groggy"),

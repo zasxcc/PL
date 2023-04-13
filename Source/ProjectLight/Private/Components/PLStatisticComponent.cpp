@@ -36,8 +36,7 @@ void UPLStatisticComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 void UPLStatisticComponent::ApplyDamage(float _damage)
 {
 	/*  PLType.h 에 정의
-	 *  #define STAT_HP FGameplayTag::RequestGameplayTag("Stat.HP")
-	 */
+		#define STAT_HP FGameplayTag::RequestGameplayTag("Stat.HP")  */
 	
 	if(CharacterStat.Contains(STAT_HP))
 	{
@@ -52,7 +51,7 @@ void UPLStatisticComponent::ApplyDamage(float _damage)
 void UPLStatisticComponent::DeadEvent()
 {
 	//Dead Event
-	
+
 	
 }
 
