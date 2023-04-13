@@ -24,7 +24,6 @@ APLCharacter::APLCharacter()
 void APLCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

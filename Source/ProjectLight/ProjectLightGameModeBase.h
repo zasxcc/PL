@@ -13,5 +13,9 @@ UCLASS()
 class PROJECTLIGHT_API AProjectLightGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_GameState)
+	TObjectPtr<class UPLTeamManagerComponent> TeamManagerComponent;
+
+	AProjectLightGameModeBase();
 };

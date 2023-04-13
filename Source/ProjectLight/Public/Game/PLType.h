@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "Engine/DataTable.h"
 #include "PLType.generated.h"
 
@@ -31,6 +32,33 @@ enum class ECharacterState : uint8
 	EDead	= 4		UMETA(DisplayName = "Dead"),
 };
 
+// Team
+UENUM(BlueprintType)
+enum class ETeam : uint8
+{
+	ENeutral			UMETA(DisplayName = "Neutral"),
+	ETeam1_Player		UMETA(DisplayName = "Player"),
+	ETeam2_Enemy01		UMETA(DisplayName = "Enemy01"),
+	ETeam3_Enemy02		UMETA(DisplayName = "Enemy02"),
+	ETeam4_Alliance		UMETA(DisplayName = "Alliance"),
+};
+
+// Team
+USTRUCT(BlueprintType)
+struct FTeamInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY( BlueprintReadWrite,EditAnywhere, Category = ACF)
+	FText DisplayName;
+
+	UPROPERTY( BlueprintReadWrite, EditAnywhere,Category = ACF)
+	TMap<ETeam, TEnumAsByte<ETeamAttitude::Type>> Relationship;
+
+	UPROPERTY( BlueprintReadWrite,EditAnywhere, Category = ACF)
+	TEnumAsByte<ECollisionChannel> CollisionChannel;
+};
 
 //스텟 관련 상세 구조체
 USTRUCT(BlueprintType)

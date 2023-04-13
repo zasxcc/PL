@@ -12,7 +12,7 @@
 
 
 UCLASS()
-class PROJECTLIGHT_API APLCharacter : public ACharacter
+class PROJECTLIGHT_API APLCharacter : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -27,7 +27,8 @@ public:
 	//현재 캐릭터 상태
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
 	ECharacterState CharacterState = ECharacterState::EIdle;
-	
+
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,8 +42,6 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
 	TObjectPtr<UPLCollisionTraceComponent> CollisionTraceComponent;
-
-
 	
 	// 가장 최근에 받은 대미지 정보
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL_Character)
@@ -65,6 +64,11 @@ public:
 	// CurrentTargetCharacter와의 각도 Return
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	float GetAngleToTarget() const;
+	
+	// min <= rand <= max 랜덤 값 리턴
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	static int GetRandomInt(int _min, int _max);
+	
 	
 	////////////////////////*Getter, Setter*///////////////////////////
 
@@ -97,10 +101,6 @@ public:
 	{
 		return CurrentTargetCharacter;
 	}
-
-	// min <= rand <= max 랜덤 값 리턴
-	UFUNCTION(BlueprintPure, Category=PL_Character)
-	static int GetRandomInt(int _min, int _max);
 	
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	class UPLAnimationInstance* GetPLAnimationInstance() const;
