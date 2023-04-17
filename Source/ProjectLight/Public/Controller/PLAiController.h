@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIController.h"
 #include "Game/PLType.h"
-#include "GameFramework/Controller.h"
 #include "PLAiController.generated.h"
 
 /**
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class PROJECTLIGHT_API APLAiController : public AController, public IGenericTeamAgentInterface
+class PROJECTLIGHT_API APLAiController : public AAIController
 {
 	GENERATED_BODY()
 public:

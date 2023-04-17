@@ -20,7 +20,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Collision)
 	TMap<FName,FCollisionTraceInfo> CollisionTraceInfo;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = PL_Collision)
+	UPROPERTY(BlueprintReadOnly, Category = PL_Collision)
 	TArray<TObjectPtr<AActor>> IgnoredActors;
 
 	UPROPERTY()

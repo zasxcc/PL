@@ -57,7 +57,7 @@ public:
 	TMap<ETeam, TEnumAsByte<ETeamAttitude::Type>> Relationship;
 
 	UPROPERTY( BlueprintReadWrite,EditAnywhere, Category = ACF)
-	TEnumAsByte<ECollisionChannel> CollisionChannel;
+	TEnumAsByte<ECollisionChannel> CollisionChannel = ECollisionChannel::ECC_Pawn;
 };
 
 //스텟 관련 상세 구조체
