@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/PLCharacter.h"
+#include "Interface/PLTargetableInterface.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "PLAICharacter.generated.h"
 
@@ -11,16 +12,17 @@
  * 
  */
 UCLASS()
-class PROJECTLIGHT_API APLAICharacter : public APLCharacter
+class PROJECTLIGHT_API APLAICharacter : public APLCharacter, public IPLTargetableInterface
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
-	UAIPerceptionStimuliSourceComponent* AiPerceptionStimuliSourceComp;
+	TObjectPtr<UAIPerceptionStimuliSourceComponent> AiPerceptionStimuliSourceComp;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TArray<FAiCharacterSkillInfo> SkillInfo;
+
 
 private:
 	// 스킬 관련 타이머

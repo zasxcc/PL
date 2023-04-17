@@ -14,12 +14,15 @@ class PROJECTLIGHT_API APLPlayerCharacter : public APLCharacter
 {
 	GENERATED_BODY()
 	
-private:
-	UPROPERTY(VisibleAnywhere, Category=PL)
-	class UCameraComponent* CameraComp;
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
+	TObjectPtr<class UCameraComponent> CameraComp;
 
-	UPROPERTY(VisibleAnywhere, Category=PL)
-	class USpringArmComponent* SpringArmComp;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
+	TObjectPtr<class USpringArmComponent> SpringArmComp;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
+	TObjectPtr<class UPLTargetingComponent> TargetingComp;
 	
 public:
 

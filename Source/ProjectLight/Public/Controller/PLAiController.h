@@ -16,10 +16,14 @@ class PROJECTLIGHT_API APLAiController : public AAIController
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiController)
-	class UAIPerceptionComponent* AiPerceptionComp;
+	TObjectPtr<class UAIPerceptionComponent> AiPerceptionComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_AiController)
 	ETeam CharacterTeam = ETeam::ENeutral;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_AiController)
+	TObjectPtr<class APLCharacter> OwnerCharacter;
+	
 
 
 public:
@@ -27,13 +31,20 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
+	virtual void OnPossess(APawn* InPawn) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
-	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const;
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
 	// 팀 등록
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void AssignTeam(ETeam _team);
+
+	// Perception Sight Loc and Rot
+	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
+	
+
+
 	
 	UFUNCTION()
-	void OnTargetPerceptionUpdated_Delegate(AActor* Actor, FAIStimulus Stimulus);
+	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 };

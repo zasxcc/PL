@@ -4,6 +4,8 @@
 #include "Controller/PLAiController.h"
 
 #include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Character/PLCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
 
 APLAiController::APLAiController()
@@ -20,9 +22,20 @@ void APLAiController::BeginPlay()
 {
 	Super::BeginPlay();
 	AssignTeam(CharacterTeam);
-	AiPerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnTargetPerceptionUpdated_Delegate);
+	AiPerceptionComp->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ThisClass::OnTargetPerceptionUpdated);
 }
 
+void APLAiController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	OwnerCharacter = Cast<APLCharacter>(InPawn);
+	if( !OwnerCharacter)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Error :: PLAIController :: OnPossess :: OwnerCharacter Is Not Valid"));
+	}
+}
+
+// 팀 별 관계 설정
 ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other) const
 {
 	if (APawn const* OtherPawn = Cast<APawn>(&Other))
@@ -61,37 +74,83 @@ ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other)
 	return ETeamAttitude::Neutral;
 }
 
+void APLAiController::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const
+{
+	Super::GetActorEyesViewPoint(OutLocation, OutRotation);
+	if(OwnerCharacter)
+	{
+		FTransform tr = OwnerCharacter->GetActorTransform();
+		OutLocation = tr.GetLocation();
+		OutRotation = tr.Rotator();
+	}
+}
+
+//////////////////////////// 팀 관련 함수 /////////////////////
 void APLAiController::SetGenericTeamId(const FGenericTeamId& InTeamID)
 {
 	//IGenericTeamAgentInterface::SetGenericTeamId(InTeamID);
 	CharacterTeam = static_cast<ETeam>(InTeamID.GetId());
 }
 
+
+
 FGenericTeamId APLAiController::GetGenericTeamId() const
 {
 	return static_cast<uint8>(CharacterTeam);
 }
 
-
+// 팀 등록
 void APLAiController::AssignTeam(ETeam _team)
 {
 	CharacterTeam = _team;
 	SetGenericTeamId(static_cast<uint8>(CharacterTeam));
 }
+///////////////////////////////////////////////////////////////
 
-
-void APLAiController::OnTargetPerceptionUpdated_Delegate(AActor* Actor, FAIStimulus Stimulus)
+// Ai perception Update 
+void APLAiController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	switch (Stimulus.Type)
+	const APLCharacter* _plCharacter = Cast<APLCharacter>(Actor);
+	
+	if(IsValid(_plCharacter))
 	{
-	case 0:
-		// react to sight stimulus
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Sight"));
-		break;
-	case 1:
-		// react to hearing;
+		if(Stimulus.WasSuccessfullySensed() == true)
+		{
+			switch (Stimulus.Type)
+			{
+			case 0:
+				// react to sight stimulus
+				Blackboard->SetValueAsObject("CurrentTargetActor",Actor);
+				bAllowStrafe = true;
+				break;
+			case 1:
+				// react to hearing stimulus
+			
+				break;
 		
-	default:
-		return;
+			default:
+			
+				break;
+			}
+		}
+		else if(Stimulus.WasSuccessfullySensed() == false)
+		{
+			switch (Stimulus.Type)
+			{
+			case 0:
+				// react to sight stimulus
+				Blackboard->ClearValue("CurrentTargetActor");
+				bAllowStrafe = false;
+				break;
+			case 1:
+				// react to hearing stimulus
+			
+				break;
+		
+			default:
+			
+				break;
+			}
+		}
 	}
 }

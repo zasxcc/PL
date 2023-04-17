@@ -4,12 +4,14 @@
 #include "Character/PLPlayerCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/PLTargetingComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 APLPlayerCharacter::APLPlayerCharacter()
 {
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponenet"));
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	TargetingComp = CreateDefaultSubobject<UPLTargetingComponent>(TEXT("TargetingComponent"));
 
 	SpringArmComp->SetupAttachment(RootComponent);
 	CameraComp->SetupAttachment(SpringArmComp);
