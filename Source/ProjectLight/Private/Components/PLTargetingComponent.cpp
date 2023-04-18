@@ -71,7 +71,7 @@ void UPLTargetingComponent::ToggleTargeting()
 	}
 	else
 	{
-		
+		ActivateTargeting();
 	}
 }
 
