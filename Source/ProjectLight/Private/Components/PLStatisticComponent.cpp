@@ -33,6 +33,24 @@ void UPLStatisticComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
+FPLStatDetail UPLStatisticComponent::GetCurrentCharacterStat(FGameplayTag _charStat)
+{
+	if(CharacterStat.Contains(_charStat))
+	{
+		return CharacterStat[_charStat];
+	}
+	return FPLStatDetail();
+}
+
+FPLStatDetail UPLStatisticComponent::GetDefaultCharacterStat(FGameplayTag _charStat)
+{
+	if(DefaultCharacterStat.Contains(_charStat))
+	{
+		return DefaultCharacterStat[_charStat];
+	}
+	return FPLStatDetail();
+}
+
 void UPLStatisticComponent::ApplyDamage(float _damage)
 {
 	/*  PLType.h 에 정의

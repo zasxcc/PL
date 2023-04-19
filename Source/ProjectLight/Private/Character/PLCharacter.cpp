@@ -48,7 +48,23 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 
 float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	// 대미지 
 	GetPLStatisticComponent()->ApplyDamage(DamageAmount);
+	// HitGage 증가
+	GetPLStatisticComponent()->ModifyStat(STAT_HitGage, DamageAmount, false);
+	
+	
+	const float _hitGageMaxValue = GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_HitGage).MaxValue;
+	const float _hitGageCurrentValue = GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_HitGage).Value;
+	
+	// HitGage가 Max보다 높다면 Hit 애니메이션 재생
+	if(_hitGageCurrentValue >=_hitGageMaxValue)
+	{
+		PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Hit"));
+		GetPLStatisticComponent()->ModifyStat(STAT_HitGage, -_hitGageCurrentValue, false);
+	}
+	
+	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 

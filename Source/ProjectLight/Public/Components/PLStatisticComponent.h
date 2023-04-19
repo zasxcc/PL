@@ -41,6 +41,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/////////// Getter Setter ////////////////////
+	UFUNCTION(BlueprintPure, Category=PL_Stat)
+	FPLStatDetail GetCurrentCharacterStat(FGameplayTag _charStat);
+	
+	UFUNCTION(BlueprintPure, Category=PL_Stat)
+	FPLStatDetail GetDefaultCharacterStat(FGameplayTag _charStat);
+	///////////////////////////////////////////
+
 	//대미지 
 	UFUNCTION(BlueprintCallable, Category=PL_Stat)
 	void ApplyDamage(float _damage);

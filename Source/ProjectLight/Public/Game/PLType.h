@@ -10,6 +10,7 @@
 #define STAT_ATK FGameplayTag::RequestGameplayTag("Stat.ATK")
 #define STAT_DEF FGameplayTag::RequestGameplayTag("Stat.DEF")
 #define STAT_HP FGameplayTag::RequestGameplayTag("Stat.HP")
+#define STAT_HitGage FGameplayTag::RequestGameplayTag("Stat.HitGage")
 
 //방향 Enum
 UENUM(BlueprintType)
@@ -66,6 +67,9 @@ struct FPLStatDetail : public FTableRowBase
 {
 	GENERATED_BODY()
 public:
+	FPLStatDetail()
+	{};
+	
 	// 스텟의 최댓값, -1이라면 최댓값이 없음
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
 	float MaxValue = 500.0f;

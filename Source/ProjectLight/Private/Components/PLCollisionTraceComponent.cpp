@@ -31,6 +31,13 @@ void UPLCollisionTraceComponent::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &UPLCollisionTraceComponent::UpdateCollisionTrace, 0.01f, true);
 }
 
+void UPLCollisionTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	//UpdateCollisionTrace();
+}
+
 void UPLCollisionTraceComponent::StartCollisionTrace(FName _collisionTraceInfoName,  FDamageInfo _damageInfo)
 {
 	if(CollisionTraceInfo.Contains(_collisionTraceInfoName))
@@ -148,7 +155,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 									Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
 								}
 							}
-
+							
 							//피직스 머테리얼 SurfaceType에 맞는 파티클과 사운드 재생
 							if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound.Contains(_hitRes.PhysMaterial.Get()->SurfaceType))
 							{
