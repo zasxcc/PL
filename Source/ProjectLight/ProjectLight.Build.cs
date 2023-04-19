@@ -8,7 +8,7 @@ public class ProjectLight : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTags","AIModule" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTags","AIModule", "Niagara","PhysicsCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

@@ -2,12 +2,14 @@
 
 
 #include "Components/PLCollisionTraceComponent.h"
-
 #include "Character/PLCharacter.h"
 #include "Components/PLStatisticComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Engine/DamageEvents.h"
 #include "Game/PLType.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 // Sets default values for this component's properties
 UPLCollisionTraceComponent::UPLCollisionTraceComponent()
@@ -26,7 +28,7 @@ void UPLCollisionTraceComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	// 콜리전 타이머 설정
-	GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &UPLCollisionTraceComponent::UpdateCollisionTrace, 0.05f, true);
+	GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &UPLCollisionTraceComponent::UpdateCollisionTrace, 0.01f, true);
 }
 
 void UPLCollisionTraceComponent::StartCollisionTrace(FName _collisionTraceInfoName,  FDamageInfo _damageInfo)
@@ -92,9 +94,13 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 					_objectParams.AddObjectTypesToQuery(channel);
 				}
 
-				// 콜리전이 무시할 엑터 추가
+				
 				FCollisionQueryParams Params;
+				// 콜리전이 무시할 엑터 추가
 				Params.AddIgnoredActor(_ownerCharacter);
+
+				// 피직스 머테리얼 Return 가능하도록 true
+				Params.bReturnPhysicalMaterial = true;
 				if(IgnoredActors.Num() > 0)
 				{
 					Params.AddIgnoredActors(IgnoredActors);
@@ -143,6 +149,21 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 								}
 							}
 
+							//피직스 머테리얼 SurfaceType에 맞는 파티클과 사운드 재생
+							if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound.Contains(_hitRes.PhysMaterial.Get()->SurfaceType))
+							{
+								UNiagaraSystem* _playEffect = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlayEffect;
+								USoundBase* _playSound = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlaySound;
+								if(_playEffect)
+								{
+									UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _playEffect, _hitRes.Location, _hitRes.ImpactNormal.Rotation());
+								}
+								if(_playSound)
+								{
+									UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
+								}
+							}
+							
 							//대미지 적용
 							_hitRes.GetActor()->TakeDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
 						}

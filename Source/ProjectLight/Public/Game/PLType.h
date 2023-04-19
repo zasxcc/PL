@@ -130,6 +130,19 @@ public:
 	TObjectPtr<class UPLActionBase> PlayAction = nullptr;
 };
 
+// 사운드 & 이펙트
+USTRUCT(BlueprintType)
+struct FEffectAndSound : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)
+	TObjectPtr<class UNiagaraSystem> PlayEffect = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL)
+	TObjectPtr<class USoundBase> PlaySound = nullptr;
+};
+
 // 대미지 정보
 USTRUCT(BlueprintType)
 struct FDamageInfo : public FTableRowBase
@@ -155,6 +168,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = PL_DamageInfo)
 	FVector HitLoc = FVector::Zero();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_DamageInfo)
+	TMap<TEnumAsByte<EPhysicalSurface>, FEffectAndSound> PlayEffectAndSound;
 };
 
 //콜리전 관련 구조체
