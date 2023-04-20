@@ -114,6 +114,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void SetCurrentTargetCharacter(APLCharacter* _character)
 	{
+		if(_character != nullptr)
+			CharacterState = ECharacterState::ECombat;
+		
 		CurrentTargetCharacter = _character;
 	}
 	
