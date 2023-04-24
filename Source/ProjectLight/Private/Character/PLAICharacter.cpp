@@ -21,7 +21,6 @@ void APLAICharacter::BeginPlay()
 void APLAICharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	
 }
 
 

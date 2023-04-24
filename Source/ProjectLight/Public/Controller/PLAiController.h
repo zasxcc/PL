@@ -23,7 +23,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_AiController)
 	TObjectPtr<class APLCharacter> OwnerCharacter;
-	
+
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<class UCharacterMovementComponent> CharacterMovementComp;
 
 
 public:
@@ -32,6 +34,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
 	virtual void OnPossess(APawn* InPawn) override;
+
 	virtual FGenericTeamId GetGenericTeamId() const override;
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 

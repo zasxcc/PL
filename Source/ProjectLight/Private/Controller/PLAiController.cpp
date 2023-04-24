@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/PLCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 
 APLAiController::APLAiController()
@@ -23,6 +25,7 @@ void APLAiController::BeginPlay()
 	Super::BeginPlay();
 	AssignTeam(CharacterTeam);
 	AiPerceptionComp->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ThisClass::OnTargetPerceptionUpdated);
+	
 }
 
 void APLAiController::OnPossess(APawn* InPawn)
@@ -32,7 +35,9 @@ void APLAiController::OnPossess(APawn* InPawn)
 	if( !OwnerCharacter)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Error :: PLAIController :: OnPossess :: OwnerCharacter Is Not Valid"));
+		return;
 	}
+	CharacterMovementComp = OwnerCharacter->FindComponentByClass<UCharacterMovementComponent>();
 }
 
 // 팀 별 관계 설정
@@ -73,6 +78,7 @@ ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other)
 	}
 	return ETeamAttitude::Neutral;
 }
+
 
 void APLAiController::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const
 {
@@ -121,7 +127,9 @@ void APLAiController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimu
 			case 0:
 				// react to sight stimulus
 				Blackboard->SetValueAsObject("CurrentTargetActor",Actor);
-				bAllowStrafe = true;
+				CharacterMovementComp->bOrientRotationToMovement = false;
+				CharacterMovementComp->bUseControllerDesiredRotation = true;
+				SetFocus(OwnerCharacter->GetCurrentTargetCharacter());
 				break;
 			case 1:
 				// react to hearing stimulus
@@ -139,8 +147,10 @@ void APLAiController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimu
 			{
 			case 0:
 				// react to sight stimulus
-				Blackboard->ClearValue("CurrentTargetActor");
-				bAllowStrafe = false;
+				//Blackboard->ClearValue("CurrentTargetActor");
+				//CharacterMovementComp->bOrientRotationToMovement = true;
+				//CharacterMovementComp->bUseControllerDesiredRotation = false;
+				//SetFocus(nullptr);
 				break;
 			case 1:
 				// react to hearing stimulus
