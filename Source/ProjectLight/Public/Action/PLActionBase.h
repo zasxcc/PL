@@ -22,6 +22,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category=PL)
 	TObjectPtr<UAnimMontage> PlayMontage;
 
+
 public:
 	/*Called when the action is successfully triggered*/
 	UFUNCTION(BlueprintNativeEvent, Category = PL)

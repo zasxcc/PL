@@ -30,6 +30,8 @@ public:
 
 
 
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,6 +52,10 @@ protected:
 	// 현재 타겟팅한 적
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL_Character)
 	TObjectPtr<APLCharacter> CurrentTargetCharacter;
+
+	// 무적 여부
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
+	bool IsImmortality = false;
 	
 public:	
 	// Called every frame
@@ -101,6 +107,11 @@ public:
 	{
 		return CurrentTargetCharacter;
 	}
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	bool GetIsImmortality() const
+	{
+		return IsImmortality;
+	}
 	
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	class UPLAnimationInstance* GetPLAnimationInstance() const;
@@ -118,6 +129,12 @@ public:
 			CharacterState = ECharacterState::ECombat;
 		
 		CurrentTargetCharacter = _character;
+	}
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void SetIsImmortality(bool _isImmortal)
+	{
+		IsImmortality = _isImmortal;
 	}
 	
 	//////////////////////////////////////////////////////////////////

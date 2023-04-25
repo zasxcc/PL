@@ -7,6 +7,8 @@
 #include "Animation/PLAnimationInstance.h"
 #include "Components/PLCollisionTraceComponent.h"
 #include <random>
+
+#include "Action/PLActionBase.h"
 #include "Components/PLActionManagerComponent.h"
 
 // Sets default values
@@ -40,14 +42,22 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 	{
 		// StoredActionInfo에 재생할 Action과 Montage 저장 
 		ActionManagerComponent->StoredActionInfo = ActionInfo[_actionTag];
-		
 		ActionManagerComponent->ExecuteAction(ActionInfo[_actionTag].PlayAction);
-		PlayAnimMontage(ActionInfo[_actionTag].PlayMontage);
+		
+		if(GetPLActionComponent()->CurrentAction)
+		{
+			const FName _montageSectionName = GetPLActionComponent()->CurrentAction->GetMontageSectionName();
+			PlayAnimMontage(ActionInfo[_actionTag].PlayMontage, 1.0f, _montageSectionName);
+		}
 	}
 }
 
 float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	// 무적이면 Return
+	if(IsImmortality)
+		return 0.0f;
+	
 	// 대미지 
 	GetPLStatisticComponent()->ApplyDamage(DamageAmount);
 	// HitGage 증가

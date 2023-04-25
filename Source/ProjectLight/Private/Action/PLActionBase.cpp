@@ -19,7 +19,6 @@ void UPLActionBase::OnTick_Implementation(float DeltaTime)
 
 FName UPLActionBase::GetMontageSectionName_Implementation()
 {
-	const FName _returnName;
-
-	return _returnName;
+	const FName _sectionName;
+	return _sectionName;
 }
