@@ -27,6 +27,11 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<class UCharacterMovementComponent> CharacterMovementComp;
 
+	FRotator SmoothTargetRotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SmoothFocusInterpSpeed = 30.0f;
+
 
 public:
 	APLAiController();
@@ -34,6 +39,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn) override;
 
 	virtual FGenericTeamId GetGenericTeamId() const override;
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;

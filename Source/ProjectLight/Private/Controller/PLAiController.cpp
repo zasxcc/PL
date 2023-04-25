@@ -40,6 +40,24 @@ void APLAiController::OnPossess(APawn* InPawn)
 	CharacterMovementComp = OwnerCharacter->FindComponentByClass<UCharacterMovementComponent>();
 }
 
+void APLAiController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn)
+{
+	Super::UpdateControlRotation(DeltaTime, bUpdatePawn);
+	// Smooth 턴
+	if (bUpdatePawn)
+	{
+		const FRotator CurrentPawnRotation = OwnerCharacter->GetActorRotation();
+
+		SmoothTargetRotation = UKismetMathLibrary::RInterpTo_Constant(OwnerCharacter->GetActorRotation(), ControlRotation, DeltaTime, SmoothFocusInterpSpeed);
+
+		if (CurrentPawnRotation.Equals(SmoothTargetRotation, 1e-3f) == false)
+		{
+			// 타겟에게 부드럽게 회전
+			OwnerCharacter->FaceRotation(SmoothTargetRotation, DeltaTime);
+		}
+	}
+}
+
 // 팀 별 관계 설정
 ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other) const
 {
