@@ -9,6 +9,7 @@
 #include <random>
 
 #include "Action/PLActionBase.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/PLActionManagerComponent.h"
 
 // Sets default values
@@ -52,17 +53,70 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 	}
 }
 
+
+void APLCharacter::DeadEvent()
+{
+	// 캐릭터 상태 변경
+	CharacterState = ECharacterState::EDead;
+
+	// 무적
+	SetIsImmortality(true);
+	// 콜리전 
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// 중력 Disable
+	GetMesh()->SetEnableGravity(false);
+	GetCapsuleComponent()->SetEnableGravity(false);
+
+	PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Dead"));
+}
+
+void APLCharacter::StartGuard()
+{
+	SetIsGuard(true);
+	SetIsParry(true);
+
+	PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Guard"));
+
+	GetWorld()->GetTimerManager().SetTimer(ParryTimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			// 패링 false
+			SetIsParry(false);
+		
+			// 타이머 초기화
+			GetWorld()->GetTimerManager().ClearTimer(ParryTimerHandle);
+		}), 0.2f, false);
+	
+}
+
+void APLCharacter::StopGuard()
+{
+	SetIsGuard(false);
+	SetIsParry(false);
+	GetWorld()->GetTimerManager().ClearTimer(ParryTimerHandle);;
+}
+
 float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	// 무적이면 Return
+	// 무적이면 Return (대미지 Causer가 CollisionTraceComponent로 대미지를 발생시켰다면, Receiver가 무적일 경우의 처리를 CollisionTraceComponent에서 먼저 처리해버림)
 	if(IsImmortality)
+		return 0.0f;
+
+	// 대미지가 0이하라면 Return
+	if(DamageAmount <= 0.0f)
 		return 0.0f;
 	
 	// 대미지 
 	GetPLStatisticComponent()->ApplyDamage(DamageAmount);
 	// HitGage 증가
 	GetPLStatisticComponent()->ModifyStat(STAT_HitGage, DamageAmount, false);
-	
+
+	// Trigger DeadEvent
+	if(GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_HP).Value <= 0.0f)
+	{
+		DeadEvent();
+		return 0.0f;
+	}
 	
 	const float _hitGageMaxValue = GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_HitGage).MaxValue;
 	const float _hitGageCurrentValue = GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_HitGage).Value;

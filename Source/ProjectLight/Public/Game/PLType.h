@@ -10,7 +10,9 @@
 #define STAT_ATK FGameplayTag::RequestGameplayTag("Stat.ATK")
 #define STAT_DEF FGameplayTag::RequestGameplayTag("Stat.DEF")
 #define STAT_HP FGameplayTag::RequestGameplayTag("Stat.HP")
+#define STAT_Stamina FGameplayTag::RequestGameplayTag("Stat.Stamina")
 #define STAT_HitGage FGameplayTag::RequestGameplayTag("Stat.HitGage")
+
 
 //방향 Enum
 UENUM(BlueprintType)

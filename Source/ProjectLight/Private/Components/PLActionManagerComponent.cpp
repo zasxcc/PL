@@ -72,7 +72,6 @@ void UPLActionManagerComponent::ExitAction()
 {
 	CurrentAction->OnActionEnded();
 	CurrentAction = nullptr;
-
 }
 
 APLCharacter* UPLActionManagerComponent::GetPLOwnerCharacter()

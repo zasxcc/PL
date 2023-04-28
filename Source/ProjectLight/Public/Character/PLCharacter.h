@@ -45,17 +45,40 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
 	TObjectPtr<UPLCollisionTraceComponent> CollisionTraceComponent;
 	
-	// 가장 최근에 받은 대미지 정보
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL_Character)
-	FDamageInfo LastDamageInfo;
-
-	// 현재 타겟팅한 적
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=PL_Character)
-	TObjectPtr<APLCharacter> CurrentTargetCharacter;
-
+	
+	
 	// 무적 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
 	bool IsImmortality = false;
+
+	// 패링 여부
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
+	bool IsParry = false;
+
+	// 가드 여부
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
+	bool IsGuard = false;
+
+	// 가장 최근에 받은 대미지 정보
+	UPROPERTY(BlueprintReadWrite, Category=PL_Character)
+	FDamageInfo LastDamageInfo;
+
+	// 현재 타겟팅한 적
+	UPROPERTY(BlueprintReadWrite, Category=PL_Character)
+	TObjectPtr<APLCharacter> CurrentTargetCharacter;
+
+	
+	UPROPERTY()
+	FTimerHandle ParryTimerHandle;
+
+public:
+	//방어시의 이펙트와 사운드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
+	FEffectAndSound GuardParticleAndSound;
+
+	//패링시의 이펙트와 사운드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
+	FEffectAndSound ParryParticleAndSound;
 	
 public:	
 	// Called every frame
@@ -63,6 +86,16 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void PlayAction(FGameplayTag _actionTag);
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void DeadEvent();
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void StartGuard();
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void StopGuard();
+	
 
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -76,7 +109,7 @@ public:
 	static int GetRandomInt(int _min, int _max);
 	
 	
-	////////////////////////*Getter, Setter*///////////////////////////
+	//////////////////////// Getter, Setter ///////////////////////////
 
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	class UPLStatisticComponent* GetPLStatisticComponent() const
@@ -112,6 +145,18 @@ public:
 	{
 		return IsImmortality;
 	}
+
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	bool GetIsParry() const
+	{
+		return IsParry;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	bool GetIsGuard() const
+	{
+		return IsGuard;
+	}
 	
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	class UPLAnimationInstance* GetPLAnimationInstance() const;
@@ -135,6 +180,18 @@ public:
 	void SetIsImmortality(bool _isImmortal)
 	{
 		IsImmortality = _isImmortal;
+	}
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void SetIsGuard(bool _isGuard)
+	{
+		IsGuard = _isGuard;
+	}
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void SetIsParry(bool _isParry)
+	{
+		IsParry = _isParry;
 	}
 	
 	//////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PLCharacter.h"
+#include "Controller/PLPlayerController.h"
 #include "PLPlayerCharacter.generated.h"
 
 /**
@@ -45,6 +46,10 @@ public:
 	{
 		return SpringArmComp;
 	}
-	
+	UFUNCTION(BlueprintPure, Category=PL)
+	class APLPlayerController* GetPLPlayerController() 
+	{
+		return Cast<APLPlayerController>(GetLocalViewingPlayerController());
+	}
 	
 };

@@ -15,11 +15,22 @@ class PROJECTLIGHT_API APLPlayerController : public APlayerController, public IG
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY( BlueprintReadWrite, Category = PL_Character)
+	bool EnableAttack = true;
 
+	UPROPERTY( BlueprintReadWrite, Category = PL_Character)
+	bool EnableGuard = true;
+
+	UPROPERTY( BlueprintReadWrite, Category = PL_Character)
+	bool EnableDodge = true;
+
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
 	ETeam CharacterTeam = ETeam::ENeutral;
-	
+
+
 public:
 	APLPlayerController();
 	virtual void Tick(float DeltaSeconds) override;
@@ -30,4 +41,42 @@ public:
 	// 팀 등록
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void AssignTeam(ETeam _team);
+
+	/////// Getter, Setter //////
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	bool GetEnableAttack() const
+	{
+		return EnableAttack;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	bool GetEnableGuard() const
+	{
+		return EnableGuard;
+	}
+
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	bool GetEnableDodge() const
+	{
+		return EnableDodge;
+	}
+	
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void SetEnableAttack(bool _isEnable)
+	{
+		EnableAttack = _isEnable;
+	}
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void SetEnableGuard(bool _isEnable)
+	{
+		EnableGuard = _isEnable;
+	}
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void SetEnableDodge(bool _isEnable)
+	{
+		EnableDodge = _isEnable;
+	}
+	//////////////////////////////
 };

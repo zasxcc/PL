@@ -81,15 +81,17 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 {
 	for(auto& _collisionTrace : CollisionTraceInfo)
 	{
+		float _finalDamage = 0.0f;
+		
 		if(CollisionTraceInfo[_collisionTrace.Key].bIsActivateCollision)
 		{
 			FHitResult _hitRes;
-			TObjectPtr<APLCharacter> _ownerCharacter = Cast<APLCharacter>(GetOwner());
-			if(IsValid(_ownerCharacter))
+			TObjectPtr<APLCharacter> _ownerDealerCharacter = Cast<APLCharacter>(GetOwner());
+			if(IsValid(_ownerDealerCharacter))
 			{
 				// 콜리전 시작, 끝 위치
-				FVector _startPos = _ownerCharacter->GetMesh()->GetSocketLocation( CollisionTraceInfo[_collisionTrace.Key].StartSock);
-				FVector _endPos = _ownerCharacter->GetMesh()->GetSocketLocation( CollisionTraceInfo[_collisionTrace.Key].EndSock);
+				FVector _startPos = _ownerDealerCharacter->GetMesh()->GetSocketLocation( CollisionTraceInfo[_collisionTrace.Key].StartSock);
+				FVector _endPos = _ownerDealerCharacter->GetMesh()->GetSocketLocation( CollisionTraceInfo[_collisionTrace.Key].EndSock);
 
 				//콜리전 Orientation
 				const FRotator _orientation = GetLineRotation(_startPos, _endPos);
@@ -104,7 +106,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 				
 				FCollisionQueryParams Params;
 				// 콜리전이 무시할 엑터 추가
-				Params.AddIgnoredActor(_ownerCharacter);
+				Params.AddIgnoredActor(_ownerDealerCharacter);
 
 				// 피직스 머테리얼 Return 가능하도록 true
 				Params.bReturnPhysicalMaterial = true;
@@ -147,12 +149,64 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.HitLoc = _hitRes.Location;
 
 								// 대미지 계산
-								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerCharacter->GetPLStatisticComponent());
+								_finalDamage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerDealerCharacter->GetPLStatisticComponent());
 								
 								// 공격당한 엑터가 APLCharacter라면 Set LastDamageInfo 
-								if(Cast<APLCharacter>(_hitRes.GetActor()))
+								if(APLCharacter* _plHitCharacter = Cast<APLCharacter>(_hitRes.GetActor()))
 								{
-									Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+									// 무적 상태라면 (PlCharacter->TakeDamage() 함수에도 무적일 경우의 예외 처리가 있음)
+									if(_plHitCharacter->GetIsImmortality())
+									{
+										return;
+									}
+									// 패링 가능한 상태라면
+									else if(_plHitCharacter->GetIsParry())
+									{
+										// 딜러 스테미너 -10
+										_ownerDealerCharacter->GetPLStatisticComponent()->ModifyStat(STAT_Stamina, -10, true);
+										// 패리 당한 애니메이션 재생
+										_ownerDealerCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Parried"));
+										// 패링 애니메이션 재생
+										_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Parry"));
+
+										// 패링 사운드 이펙트 재생
+										UNiagaraSystem* _playEffect = _plHitCharacter->ParryParticleAndSound.PlayEffect;
+										USoundBase* _playSound = _plHitCharacter->ParryParticleAndSound.PlaySound;
+										if(_playEffect)
+										{
+											UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _playEffect, _hitRes.Location, _hitRes.ImpactNormal.Rotation());
+										}
+										if(_playSound)
+										{
+											UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
+										}
+									}
+									// 가드 가능한 상태라면
+									else if(_plHitCharacter->GetIsGuard())
+									{
+										// 가드 애니메이션 재생
+										_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Guard.Hit"));
+										// Hit 캐릭터 스테미나 -10
+										_plHitCharacter->GetPLStatisticComponent()->ModifyStat(STAT_Stamina, -10, true);
+
+										// 가드 사운드 이펙트 재생
+										UNiagaraSystem* _playEffect = _plHitCharacter->GuardParticleAndSound.PlayEffect;
+										USoundBase* _playSound = _plHitCharacter->GuardParticleAndSound.PlaySound;
+										if(_playEffect)
+										{
+											UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _playEffect, _hitRes.Location, _hitRes.ImpactNormal.Rotation());
+										}
+										if(_playSound)
+										{
+											UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
+										}
+									}
+									// 그 외 대미지가 들어가는 상황
+									else
+									{
+										CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _finalDamage;
+										Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+									}
 								}
 							}
 							
@@ -172,7 +226,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 							}
 							
 							//대미지 적용
-							_hitRes.GetActor()->TakeDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
+							_hitRes.GetActor()->TakeDamage(_finalDamage, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());
 						}
 					}
 				}
