@@ -160,6 +160,11 @@ int APLCharacter::GetRandomInt(int _min, int _max)
 	return _dist(_rd);
 }
 
+float APLCharacter::GetCurrentStatPercent(FGameplayTag _currentStat) const
+{
+	return  GetPLStatisticComponent()->GetCurrentCharacterStat(_currentStat).Value / GetPLStatisticComponent()->GetCurrentCharacterStat(_currentStat).MaxValue;
+}
+
 UPLAnimationInstance* APLCharacter::GetPLAnimationInstance() const
 {
 	return Cast<UPLAnimationInstance>(GetMesh()->GetAnimInstance());

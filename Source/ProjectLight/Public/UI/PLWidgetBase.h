@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidgetBlueprint.h"
+#include "Blueprint/UserWidget.h"
 #include "PLWidgetBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTLIGHT_API UPLWidgetBase : public UUserWidgetBlueprint
+class PROJECTLIGHT_API UPLWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 

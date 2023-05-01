@@ -107,6 +107,9 @@ public:
 	// min <= rand <= max 랜덤 값 리턴
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	static int GetRandomInt(int _min, int _max);
+
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	float GetCurrentStatPercent(FGameplayTag _currentStat) const;
 	
 	
 	//////////////////////// Getter, Setter ///////////////////////////

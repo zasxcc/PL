@@ -147,9 +147,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 							{
 								// HitLocation 
 								CollisionTraceInfo[_collisionTrace.Key].DamageInfo.HitLoc = _hitRes.Location;
-
-								// 대미지 계산
-								_finalDamage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerDealerCharacter->GetPLStatisticComponent());
+								
 								
 								// 공격당한 엑터가 APLCharacter라면 Set LastDamageInfo 
 								if(APLCharacter* _plHitCharacter = Cast<APLCharacter>(_hitRes.GetActor()))
@@ -204,6 +202,9 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 									// 그 외 대미지가 들어가는 상황
 									else
 									{
+										// 대미지 계산
+										_finalDamage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerDealerCharacter->GetPLStatisticComponent());
+										
 										CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _finalDamage;
 										Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
 									}
