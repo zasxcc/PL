@@ -76,6 +76,7 @@ Content/AnimationAssets/*
 Content/CharacterAssets/*
 Content/*/Textures/*
 Content/*/Materials/*
+Content/DemonLord/*
 Content/*/Audio/*
 Content/StarterContent/*
 Content/*/MaterialLayers/*
@@ -83,6 +84,7 @@ Content/InfinityBladeEffects/*
 Content/InfinityBladeAdversaries/*
 Content/Mannequin/*
 Content/Effects/*
+Content/SoulCave/*
 Content/AdvancedMagicFX12/*
 
 
