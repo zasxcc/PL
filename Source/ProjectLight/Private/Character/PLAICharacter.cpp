@@ -2,6 +2,8 @@
 
 
 #include "Character/PLAICharacter.h"
+
+#include "Animation/PLAnimationInstance.h"
 #include "Kismet/KismetArrayLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 
@@ -30,7 +32,7 @@ void APLAICharacter::UpdateSkill()
 	CalculateSkillColdTime();
 	
 	//전투 상태일 때만, 스킬 사용 여부 검사 및 스킬 사용
-	if(CharacterState == ECharacterState::ECombat)
+	if(CharacterState == ECharacterState::ECombat && !GetPLAnimationInstance()->Montage_IsPlaying(nullptr))
 	{
 		if(IsValid(CurrentTargetCharacter))
 		{

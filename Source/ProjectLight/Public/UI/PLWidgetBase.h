@@ -13,5 +13,8 @@ UCLASS()
 class PROJECTLIGHT_API UPLWidgetBase : public UUserWidgetBlueprint
 {
 	GENERATED_BODY()
+
+public:
+	
 	
 };
