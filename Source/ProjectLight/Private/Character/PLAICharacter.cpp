@@ -4,6 +4,7 @@
 #include "Character/PLAICharacter.h"
 
 #include "Animation/PLAnimationInstance.h"
+#include "Controller/PLAiController.h"
 #include "Kismet/KismetArrayLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 
@@ -73,4 +74,28 @@ float APLAICharacter::GetDistanceFromCurrentTarget() const
 		return GetDistanceTo(CurrentTargetCharacter);
 	}
 	return -1.0f;
+}
+
+APLAiController* APLAICharacter::GetPLAiController() const
+{
+	return Cast<APLAiController>(GetController());
+}
+
+float APLAICharacter::GetAngleToTarget() const
+{
+	if (!GetCurrentTargetCharacter())
+	{
+		return 0.0f;
+	}
+
+	FVector Direction = GetCurrentTargetCharacter()->GetActorLocation() - GetActorLocation();
+	Direction.Normalize();
+
+	// Compute the angle between the two vectors
+	const float DotProduct = FVector::DotProduct(GetActorForwardVector(), Direction);
+
+	// Convert the angle from radians to degrees
+	const float AngleInDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
+
+	return AngleInDegrees;
 }

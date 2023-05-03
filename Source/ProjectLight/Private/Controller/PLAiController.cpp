@@ -2,10 +2,9 @@
 
 
 #include "Controller/PLAiController.h"
-
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Character/PLCharacter.h"
+#include "Character/PLAICharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -31,7 +30,7 @@ void APLAiController::BeginPlay()
 void APLAiController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	OwnerCharacter = Cast<APLCharacter>(InPawn);
+	OwnerCharacter = Cast<APLAICharacter>(InPawn);
 	if( !OwnerCharacter)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Error :: PLAIController :: OnPossess :: OwnerCharacter Is Not Valid"));

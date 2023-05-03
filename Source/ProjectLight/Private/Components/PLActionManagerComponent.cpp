@@ -49,9 +49,11 @@ void UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
 		ExitAction();
 	}
 	CurrentAction = _executeAction;
-	CurrentAction->OwnerCharacter = OwnerCharacter;
-	CurrentAction->OnActionStarted();
-	
+	if(CurrentAction)
+	{
+		CurrentAction->OwnerCharacter = OwnerCharacter;
+		CurrentAction->OnActionStarted();
+	}
 	UPLAnimationInstance* _animInstance = Cast<UPLAnimationInstance>(GetPLOwnerCharacter()->GetPLAnimationInstance());
 
 	if(GetPLOwnerCharacter()->GetPLAnimationInstance())

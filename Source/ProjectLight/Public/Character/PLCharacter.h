@@ -63,9 +63,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category=PL_Character)
 	FDamageInfo LastDamageInfo;
 
-	// 현재 타겟팅한 적
-	UPROPERTY(BlueprintReadWrite, Category=PL_Character)
-	TObjectPtr<APLCharacter> CurrentTargetCharacter;
+
 
 	
 	UPROPERTY()
@@ -100,9 +98,7 @@ public:
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	// CurrentTargetCharacter와의 각도 Return
-	UFUNCTION(BlueprintPure, Category=PL_Character)
-	float GetAngleToTarget() const;
+
 	
 	// min <= rand <= max 랜덤 값 리턴
 	UFUNCTION(BlueprintPure, Category=PL_Character)
@@ -137,12 +133,7 @@ public:
 	{
 		return LastDamageInfo;
 	}
-
-	UFUNCTION(BlueprintPure, Category=PL_Character)
-		APLCharacter* GetCurrentTargetCharacter() const
-	{
-		return CurrentTargetCharacter;
-	}
+	
 	UFUNCTION(BlueprintPure, Category=PL_Character)
 	bool GetIsImmortality() const
 	{
@@ -170,14 +161,7 @@ public:
 		LastDamageInfo = _damageInfo;
 	}
 
-	UFUNCTION(BlueprintCallable, Category=PL_Character)
-	void SetCurrentTargetCharacter(APLCharacter* _character)
-	{
-		if(_character != nullptr)
-			CharacterState = ECharacterState::ECombat;
-		
-		CurrentTargetCharacter = _character;
-	}
+	
 
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void SetIsImmortality(bool _isImmortal)

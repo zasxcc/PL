@@ -5,6 +5,7 @@
 
 #include "Character/PLAICharacter.h"
 #include "Character/PLPlayerCharacter.h"
+#include "Controller/PLAiController.h"
 #include "Controller/PLPlayerController.h"
 
 void UPLDeadAction::OnActionStarted_Implementation()
@@ -13,9 +14,10 @@ void UPLDeadAction::OnActionStarted_Implementation()
 	const APLAICharacter* _aiCharacter = Cast<APLAICharacter>(OwnerCharacter);
 	APLPlayerCharacter* _playerCharacter = Cast<APLPlayerCharacter>(OwnerCharacter);
 	// AI 캐릭터일 경우
-	if(IsValid(_aiCharacter) && IsValid(_aiCharacter->GetController()))
+	if(IsValid(_aiCharacter) && IsValid(_aiCharacter->GetPLAiController()))
 	{
-		_aiCharacter->GetController()->StopMovement();
+		_aiCharacter->GetPLAiController()->StopMovement();
+		_aiCharacter->GetPLAiController()->SetFocus(nullptr);
 	}
 
 	// Player 캐릭터 일 경우

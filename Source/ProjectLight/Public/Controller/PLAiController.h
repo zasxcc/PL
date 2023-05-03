@@ -22,7 +22,7 @@ public:
 	ETeam CharacterTeam = ETeam::ENeutral;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_AiController)
-	TObjectPtr<class APLCharacter> OwnerCharacter;
+	TObjectPtr<class APLAICharacter> OwnerCharacter;
 
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<class UCharacterMovementComponent> CharacterMovementComp;

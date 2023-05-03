@@ -132,25 +132,6 @@ float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
-float APLCharacter::GetAngleToTarget() const
-{
-	if (!GetCurrentTargetCharacter())
-	{
-		return 0.0f;
-	}
-
-	FVector Direction = GetCurrentTargetCharacter()->GetActorLocation() - GetActorLocation();
-	Direction.Normalize();
-
-	// Compute the angle between the two vectors
-	const float DotProduct = FVector::DotProduct(GetActorForwardVector(), Direction);
-
-	// Convert the angle from radians to degrees
-	const float AngleInDegrees = FMath::RadiansToDegrees(FMath::Acos(DotProduct));
-
-	return AngleInDegrees;
-}
-
 
 int APLCharacter::GetRandomInt(int _min, int _max)
 {
