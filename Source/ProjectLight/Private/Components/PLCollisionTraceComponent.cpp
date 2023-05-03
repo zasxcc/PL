@@ -157,8 +157,9 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 									{
 										return;
 									}
+									
 									// 패링 가능한 상태라면
-									else if(_plHitCharacter->GetIsParry())
+									if(_plHitCharacter->GetIsParry())
 									{
 										// 딜러 스테미너 -10
 										_ownerDealerCharacter->GetPLStatisticComponent()->ModifyStat(STAT_Stamina, -10, true);
@@ -180,6 +181,10 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										if(_playSound)
 										{
 											UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
+										}
+										if(_plHitCharacter->ParryParticleAndSound.CamShake)
+										{
+											UGameplayStatics::PlayWorldCameraShake(GetWorld(), _plHitCharacter->ParryParticleAndSound.CamShake, _hitRes.Location, 0.0f, 3000.0f);
 										}
 									}
 									// 가드 가능한 상태라면
@@ -205,6 +210,10 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										{
 											UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
 										}
+										if(_plHitCharacter->ParryParticleAndSound.CamShake)
+										{
+											UGameplayStatics::PlayWorldCameraShake(GetWorld(), _plHitCharacter->GuardParticleAndSound.CamShake, _hitRes.Location, 0.0f, 3000.0f);
+										}
 									}
 									// 그 외 대미지가 들어가는 상황
 									else
@@ -213,8 +222,10 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										_finalDamage = _hitActorStaticComp->CalculateDamage(CollisionTraceInfo[_collisionTrace.Key].DamageInfo, _ownerDealerCharacter->GetPLStatisticComponent());
 										
 										CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _finalDamage;
-										Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
-
+										if(Cast<APLCharacter>(_hitRes.GetActor()))
+										{
+											Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+										}
 										//피직스 머테리얼 SurfaceType에 맞는 파티클과 사운드 재생
 										if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound.Contains(_hitRes.PhysMaterial.Get()->SurfaceType))
 										{
@@ -229,6 +240,8 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 												UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
 											}
 										}
+									
+										UGameplayStatics::PlayWorldCameraShake(GetWorld(), CollisionTraceInfo[_collisionTrace.Key].DamageInfo.CameShake, _hitRes.Location, 0.0f, 3000.0f);
 									}
 								}
 							}

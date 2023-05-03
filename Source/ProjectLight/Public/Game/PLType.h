@@ -147,6 +147,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL)
 	TObjectPtr<class USoundBase> PlaySound = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL)
+	TSubclassOf<class UCameraShakeBase> CamShake = nullptr;
 };
 
 // 대미지 정보
@@ -175,8 +178,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = PL_DamageInfo)
 	FVector HitLoc = FVector::Zero();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_DamageInfo)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_DamageInfo)
 	TMap<TEnumAsByte<EPhysicalSurface>, FEffectAndSound> PlayEffectAndSound;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_DamageInfo)
+	TSubclassOf<UCameraShakeBase> CameShake;
 };
 
 //콜리전 관련 구조체
