@@ -24,23 +24,28 @@ public:
 
 
 public:
-	/*Called when the action is successfully triggered*/
+	/*엑션이 성공적으로 실행 될 때 트리거*/
 	UFUNCTION(BlueprintNativeEvent, Category = PL)
 	void OnActionStarted();
 	virtual void OnActionStarted_Implementation();
 
-	/*Called when the action is finished.*/
+	/*액션이 끝나면 트리거.*/
 	UFUNCTION(BlueprintNativeEvent, Category = PL)
 	void OnActionEnded();
 	virtual void OnActionEnded_Implementation();
 
-	/*Called every frame if the ActionsManagerComponent of this character has bCanTick set to true*/
+	/*액션 Tick*/
 	UFUNCTION(BlueprintNativeEvent, Category = PL)
 	void OnTick(float DeltaTime);
 	virtual void OnTick_Implementation(float DeltaTime);
 
-	/*Implement this to select the name of the montage section that should be played when executing this action */
+	/*몽타주의 섹션이름을 찾아서 그 섹션 재생*/
 	UFUNCTION(BlueprintNativeEvent, Category = PL)
 	FName GetMontageSectionName();
 	virtual FName GetMontageSectionName_Implementation();
+
+	/*실행 조건 검사*/
+	UFUNCTION(BlueprintNativeEvent, Category = PL)
+	bool CanExecuteAction(class APLCharacter* owner);
+	bool CanExecuteAction_Implementation(class APLCharacter* owner);
 };

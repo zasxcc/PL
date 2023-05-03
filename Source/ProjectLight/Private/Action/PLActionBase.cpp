@@ -22,3 +22,8 @@ FName UPLActionBase::GetMontageSectionName_Implementation()
 	const FName _sectionName;
 	return _sectionName;
 }
+
+bool UPLActionBase::CanExecuteAction_Implementation(APLCharacter* owner)
+{
+	return true;
+}

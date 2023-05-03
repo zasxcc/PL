@@ -24,6 +24,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
 	TObjectPtr<class UPLTargetingComponent> TargetingComp;
+
 	
 public:
 
@@ -34,6 +35,9 @@ public:
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void TriggerSkill(FGameplayTag _triggerSkillTag);
 	
 	UFUNCTION(BlueprintPure, Category=PL)
 	UCameraComponent* GetCameraComp() const

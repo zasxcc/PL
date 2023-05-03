@@ -162,8 +162,11 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 									{
 										// 딜러 스테미너 -10
 										_ownerDealerCharacter->GetPLStatisticComponent()->ModifyStat(STAT_Stamina, -10, true);
-										// 패리 당한 애니메이션 재생
-										_ownerDealerCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Parried"));
+										// 스테미너가 0이하라면 그로기
+										if(_ownerDealerCharacter->GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_Stamina).Value <= 0.0f)
+										{
+											_ownerDealerCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Groggy"));
+										}
 										// 패링 애니메이션 재생
 										_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Parry"));
 
@@ -186,7 +189,11 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Guard.Hit"));
 										// Hit 캐릭터 스테미나 -10
 										_plHitCharacter->GetPLStatisticComponent()->ModifyStat(STAT_Stamina, -10, true);
-
+										// 스테미너가 0이하라면 그로기
+										if(_plHitCharacter->GetPLStatisticComponent()->GetCurrentCharacterStat(STAT_Stamina).Value <= 0.0f)
+										{
+											_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Groggy"));
+										}
 										// 가드 사운드 이펙트 재생
 										UNiagaraSystem* _playEffect = _plHitCharacter->GuardParticleAndSound.PlayEffect;
 										USoundBase* _playSound = _plHitCharacter->GuardParticleAndSound.PlaySound;
@@ -207,24 +214,26 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										
 										CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _finalDamage;
 										Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+
+										//피직스 머테리얼 SurfaceType에 맞는 파티클과 사운드 재생
+										if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound.Contains(_hitRes.PhysMaterial.Get()->SurfaceType))
+										{
+											UNiagaraSystem* _playEffect = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlayEffect;
+											USoundBase* _playSound = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlaySound;
+											if(_playEffect)
+											{
+												UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _playEffect, _hitRes.Location, _hitRes.ImpactNormal.Rotation());
+											}
+											if(_playSound)
+											{
+												UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
+											}
+										}
 									}
 								}
 							}
 							
-							//피직스 머테리얼 SurfaceType에 맞는 파티클과 사운드 재생
-							if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound.Contains(_hitRes.PhysMaterial.Get()->SurfaceType))
-							{
-								UNiagaraSystem* _playEffect = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlayEffect;
-								USoundBase* _playSound = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlaySound;
-								if(_playEffect)
-								{
-									UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _playEffect, _hitRes.Location, _hitRes.ImpactNormal.Rotation());
-								}
-								if(_playSound)
-								{
-									UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
-								}
-							}
+							
 							
 							//대미지 적용
 							_hitRes.GetActor()->TakeDamage(_finalDamage, _damageEvent, GetOwner()->GetInstigatorController(),GetOwner());

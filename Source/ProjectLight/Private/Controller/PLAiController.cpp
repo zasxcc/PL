@@ -133,7 +133,7 @@ void APLAiController::AssignTeam(ETeam _team)
 // Ai perception Update 
 void APLAiController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	const APLCharacter* _plCharacter = Cast<APLCharacter>(Actor);
+	APLCharacter* _plCharacter = Cast<APLCharacter>(Actor);
 	
 	if(IsValid(_plCharacter))
 	{
@@ -146,7 +146,9 @@ void APLAiController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimu
 				Blackboard->SetValueAsObject("CurrentTargetActor",Actor);
 				CharacterMovementComp->bOrientRotationToMovement = false;
 				CharacterMovementComp->bUseControllerDesiredRotation = true;
+				OwnerCharacter->SetCurrentTargetCharacter(_plCharacter);
 				SetFocus(OwnerCharacter->GetCurrentTargetCharacter());
+				StopMovement();
 				break;
 			case 1:
 				// react to hearing stimulus

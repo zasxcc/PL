@@ -38,7 +38,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category=PL)
-	void ExecuteAction(class UPLActionBase* _executeAction);
+	bool ExecuteAction(class UPLActionBase* _executeAction);
 
 	UFUNCTION(BlueprintCallable, Category=PL)
 	void ExitAction();

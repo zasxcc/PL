@@ -43,9 +43,11 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 	{
 		// StoredActionInfo에 재생할 Action과 Montage 저장 
 		ActionManagerComponent->StoredActionInfo = ActionInfo[_actionTag];
-		ActionManagerComponent->ExecuteAction(ActionInfo[_actionTag].PlayAction);
+
+		// ExecuteAction 실행 성공여부 
+		const bool _isExecute =  ActionManagerComponent->ExecuteAction(ActionInfo[_actionTag].PlayAction);
 		
-		if(GetPLActionComponent()->CurrentAction)
+		if(GetPLActionComponent()->CurrentAction && _isExecute)
 		{
 			const FName _montageSectionName = GetPLActionComponent()->CurrentAction->GetMontageSectionName();
 			PlayAnimMontage(ActionInfo[_actionTag].PlayMontage, 1.0f, _montageSectionName);

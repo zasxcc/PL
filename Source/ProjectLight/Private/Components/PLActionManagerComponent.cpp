@@ -41,7 +41,7 @@ void UPLActionManagerComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	// ...
 }
 
-void UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
+bool UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
 {
 	/*기존에 CurrentAction이 이미 있다면, ExitAction 함수 실행*/
 	if(CurrentAction)
@@ -51,6 +51,12 @@ void UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
 	CurrentAction = _executeAction;
 	if(CurrentAction)
 	{
+		// 액션 실행 조건에 맞지 않으면 리턴
+		if(CurrentAction->CanExecuteAction(OwnerCharacter) == false)
+		{
+			return false;
+		}
+		
 		CurrentAction->OwnerCharacter = OwnerCharacter;
 		CurrentAction->OnActionStarted();
 	}
@@ -67,7 +73,10 @@ void UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
 		_animInstance->OnMontageStarted.AddDynamic(this, &UPLActionManagerComponent::HandleMontageStarted);
 		_animInstance->OnMontageEnded.AddDynamic(this, &UPLActionManagerComponent::HandleMontageFinished);
 		_animInstance->OnMontageBlendingOut.AddDynamic(this, &UPLActionManagerComponent::HandleMontageBlendingOut);
+
+		return true;
 	}
+	return false;
 }
 
 void UPLActionManagerComponent::ExitAction()

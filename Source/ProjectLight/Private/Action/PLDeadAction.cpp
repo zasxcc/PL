@@ -7,6 +7,9 @@
 #include "Character/PLPlayerCharacter.h"
 #include "Controller/PLAiController.h"
 #include "Controller/PLPlayerController.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISense_Hearing.h"
+#include "Perception/AISense_Sight.h"
 
 void UPLDeadAction::OnActionStarted_Implementation()
 {
@@ -18,6 +21,8 @@ void UPLDeadAction::OnActionStarted_Implementation()
 	{
 		_aiCharacter->GetPLAiController()->StopMovement();
 		_aiCharacter->GetPLAiController()->SetFocus(nullptr);
+		_aiCharacter->GetPLAiController()->AiPerceptionComp->SetSenseEnabled(UAISense_Sight::StaticClass(), false);
+		_aiCharacter->GetPLAiController()->AiPerceptionComp->SetSenseEnabled(UAISense_Hearing::StaticClass(), false);
 	}
 
 	// Player 캐릭터 일 경우

@@ -31,3 +31,11 @@ void APLPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+
+void APLPlayerCharacter::TriggerSkill(FGameplayTag _triggerSkillTag)
+{
+	if(ActionInfo.Contains(_triggerSkillTag))
+	{
+		PlayAction(_triggerSkillTag);
+	}
+}

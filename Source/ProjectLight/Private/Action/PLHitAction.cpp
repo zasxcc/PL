@@ -5,6 +5,7 @@
 
 #include "Character/PLAICharacter.h"
 #include "Character/PLPlayerCharacter.h"
+#include "Controller/PLAiController.h"
 
 void UPLHitAction::OnActionStarted_Implementation()
 {
@@ -18,16 +19,11 @@ void UPLHitAction::OnActionStarted_Implementation()
 		// 이동 스탑
 		_aiCharacter->GetController()->StopMovement();
 
-		// 현재 타겟팅한 적이 없다면
-		if(!IsValid(_aiCharacter->GetCurrentTargetCharacter()))
-		{
-			// DamageCauser가 Null이 아니라면
-			if(Cast<APLCharacter>(_aiCharacter->GetLastDamageInfo().DamageCauser))
-			{
-				// DamageCauser를 CurrentTarget으로 설정
-				_aiCharacter->SetCurrentTargetCharacter(Cast<APLCharacter>(_aiCharacter->GetLastDamageInfo().DamageCauser));
-			}
-		}
+		// 포커싱 해제
+		_aiCharacter->GetPLAiController()->SetFocus(nullptr);
+		
+		
+		
 	}
 
 	// Player 캐릭터일 경우
@@ -44,8 +40,30 @@ void UPLHitAction::OnActionEnded_Implementation()
 {
 	Super::OnActionEnded_Implementation();
 
-	APLPlayerCharacter* _playerCharacter = Cast<APLPlayerCharacter>(OwnerCharacter);\
-	if(_playerCharacter)
+	APLPlayerCharacter* _playerCharacter = Cast<APLPlayerCharacter>(OwnerCharacter);
+	APLAICharacter* _aiCharacter = Cast<APLAICharacter>(OwnerCharacter);
+
+	// ai Character
+	if(_aiCharacter)
+	{
+		// 현재 타겟팅한 적이 없다면
+		if(!IsValid(_aiCharacter->GetCurrentTargetCharacter()))
+		{
+			// DamageCauser가 Null이 아니라면
+			if(Cast<APLCharacter>(_aiCharacter->GetLastDamageInfo().DamageCauser))
+			{
+				// DamageCauser를 CurrentTarget으로 설정
+				_aiCharacter->SetCurrentTargetCharacter(Cast<APLCharacter>(_aiCharacter->GetLastDamageInfo().DamageCauser));
+
+				// 포커싱
+				_aiCharacter->GetPLAiController()->SetFocus(nullptr);
+			}
+		}
+		
+	}
+
+	// player Character
+	else if(_playerCharacter)
 	{
 		// 공격, 회피, 가드 가능으로 변경
 		_playerCharacter->GetPLPlayerController()->SetEnableAttack(true);
