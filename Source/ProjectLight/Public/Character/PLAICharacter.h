@@ -24,6 +24,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TObjectPtr<class UNiagaraComponent> FarDistanceEffect_02;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	TObjectPtr<class UWidgetComponent> EnemyUIWidgetComp;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TArray<FAiCharacterSkillInfo> SkillInfo;
@@ -47,6 +50,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void DeadEvent() override;
+	virtual void BecomeTargetEvent() override;
+	virtual void BecomeNonTargetEvent() override;
 
 	// 스킬 관련 타이머 함수
 	UFUNCTION()

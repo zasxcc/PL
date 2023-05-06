@@ -15,6 +15,7 @@ class PROJECTLIGHT_API UPLWidgetBase : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Widget, meta=(ExposeOnSpawn =true))
+	TObjectPtr<class APLCharacter> OwnerPLCharacter; 
 	
 };

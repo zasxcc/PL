@@ -5,29 +5,42 @@
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
 #include "Animation/PLAnimationInstance.h"
+#include "Components/Widget.h"
+#include "Components/WidgetComponent.h"
 #include "Controller/PLAiController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "UI/PLWidgetBase.h"
 
 APLAICharacter::APLAICharacter()
 {
 	AiPerceptionStimuliSourceComp = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AiperceptionStimuliSource"));
 	FarDistanceEffect_01 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect01"));
 	FarDistanceEffect_02 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect02"));
-
-	FarDistanceEffect_01->SetupAttachment(GetMesh());
-	FarDistanceEffect_02->SetupAttachment(GetMesh());
+	EnemyUIWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComp"));
+	
+	FarDistanceEffect_01->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "head");
+	FarDistanceEffect_02->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "head");
+	EnemyUIWidgetComp->SetupAttachment(GetMesh());
+	
+	EnemyUIWidgetComp->SetVisibility(false);
 }
 
 void APLAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// 스킬 업데이트 타이머 
 	GetWorld()->GetTimerManager().SetTimer(AiSkillTimerHandle, this, &APLAICharacter::UpdateSkill, 0.1f, true);
 
 	// 플레이어와의 거리 체크 타이머 [플레이어의 빛 반경으로 들어와있는지 체크를 위해]
-	GetWorld()->GetTimerManager().SetTimer(CheckDistancePlayerTimerHandle, this, &APLAICharacter::CheckDistanceToPlayer, 0.5f, true);
+	GetWorld()->GetTimerManager().SetTimer(CheckDistancePlayerTimerHandle, this, &APLAICharacter::CheckDistanceToPlayer, 0.25f, true);
+
+	// 위젯 변수 설정
+	if(Cast<UPLWidgetBase>(EnemyUIWidgetComp->GetWidget()))
+	{
+		Cast<UPLWidgetBase>(EnemyUIWidgetComp->GetWidget())->OwnerPLCharacter = this;
+	}
 }
 
 void APLAICharacter::Tick(float DeltaSeconds)
@@ -50,6 +63,18 @@ void APLAICharacter::DeadEvent()
 	{
 		GetWorld()->GetTimerManager().ClearTimer(AiSkillTimerHandle);
 	}
+}
+
+void APLAICharacter::BecomeTargetEvent()
+{
+	IPLTargetableInterface::BecomeTargetEvent();
+	EnemyUIWidgetComp->SetVisibility(true);
+}
+
+void APLAICharacter::BecomeNonTargetEvent()
+{
+	IPLTargetableInterface::BecomeNonTargetEvent();
+	EnemyUIWidgetComp->SetVisibility(false);
 }
 
 
@@ -88,7 +113,7 @@ void APLAICharacter::UpdateSkill()
 void APLAICharacter::CheckDistanceToPlayer()
 {
 	// 플레이어와의 거리가 가깝다면, 이펙트 off
-	if(GetDistanceTo(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)) < 1000.0f)
+	if(GetDistanceTo(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)) < 900.0f)
 	{
 		if(FarDistanceEffect_01->IsActive())
 		{

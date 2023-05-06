@@ -2,7 +2,6 @@
 
 
 #include "Components/PLTargetingComponent.h"
-
 #include "GameFramework/Character.h"
 #include "Interface/PLTargetableInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -77,13 +76,37 @@ void UPLTargetingComponent::ToggleTargeting()
 
 void UPLTargetingComponent::SetTarget(AActor* _target)
 {
-	// TargetableInterface를 갖고 있다면 타겟팅 
-	CurrentTarget = _target;
+	// 새로운 적으로 타겟팅 하기전, 이미 타겟팅해놓은 적이 있다면, 그 적의 타겟팅 해제 이벤트 호출
+	if(IsValid(CurrentTarget))
+	{
+		// 타겟팅 해제 이벤트 호출
+		IPLTargetableInterface* _targetable = Cast<IPLTargetableInterface>(CurrentTarget);
+		if(_targetable)
+		{
+			_targetable->BecomeNonTargetEvent();
+		}
+	}
+	
 	
 	if(_target == nullptr)
 	{
 		CurrentTarget = nullptr;
+		return;
 	}
+
+	// TargetableInterface를 갖고 있다면 타겟팅
+	if(IPLTargetableInterface* _targetable =Cast<IPLTargetableInterface>(_target))
+	{
+		CurrentTarget = _target;
+
+		// 타겟팅 획득 이벤트 호출
+		_targetable->BecomeTargetEvent();
+		
+		return;
+	}
+
+	
+	CurrentTarget = nullptr;
 }
 
 
