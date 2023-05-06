@@ -171,7 +171,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										// 패링 애니메이션 재생
 										_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Parry"));
 
-										// 패링 사운드 이펙트 재생
+										// 패링 사운드 이펙트 재생, 카메라 쉐이크
 										UNiagaraSystem* _playEffect = _plHitCharacter->ParryParticleAndSound.PlayEffect;
 										USoundBase* _playSound = _plHitCharacter->ParryParticleAndSound.PlaySound;
 										if(_playEffect)
@@ -199,7 +199,7 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										{
 											_plHitCharacter->PlayAction(FGameplayTag::RequestGameplayTag("Action.Common.Groggy"));
 										}
-										// 가드 사운드 이펙트 재생
+										// 가드 사운드 이펙트 재생, 카메라 쉐이크
 										UNiagaraSystem* _playEffect = _plHitCharacter->GuardParticleAndSound.PlayEffect;
 										USoundBase* _playSound = _plHitCharacter->GuardParticleAndSound.PlaySound;
 										if(_playEffect)
@@ -224,7 +224,10 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										CollisionTraceInfo[_collisionTrace.Key].DamageInfo.Damage = _finalDamage;
 										if(Cast<APLCharacter>(_hitRes.GetActor()))
 										{
+											// HitCharacter의 LastDamageInfo 세팅
 											Cast<APLCharacter>(_hitRes.GetActor())->SetLastDamageInfo(CollisionTraceInfo[_collisionTrace.Key].DamageInfo);
+											// HitCharacter ReceiveDamageEvent 델리게이트 BroadCast
+											Cast<APLCharacter>(_hitRes.GetActor())->DelegateReceiveDamage_OneParam.Broadcast(_ownerDealerCharacter);
 										}
 										//피직스 머테리얼 SurfaceType에 맞는 파티클과 사운드 재생
 										if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound.Contains(_hitRes.PhysMaterial.Get()->SurfaceType))
@@ -239,9 +242,11 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 											{
 												UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
 											}
+											if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.CameShake)
+											{
+												UGameplayStatics::PlayWorldCameraShake(GetWorld(), CollisionTraceInfo[_collisionTrace.Key].DamageInfo.CameShake, _hitRes.Location, 0.0f, 3000.0f);
+											}
 										}
-									
-										UGameplayStatics::PlayWorldCameraShake(GetWorld(), CollisionTraceInfo[_collisionTrace.Key].DamageInfo.CameShake, _hitRes.Location, 0.0f, 3000.0f);
 									}
 								}
 							}

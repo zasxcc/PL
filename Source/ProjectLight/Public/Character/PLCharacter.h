@@ -8,7 +8,7 @@
 #include "Game/PLType.h"
 #include "PLCharacter.generated.h"
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDelegateReceiveDamage_OneParam, APLCharacter*, DamageDealer);
 
 
 UCLASS()
@@ -28,7 +28,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PL_Character)
 	ECharacterState CharacterState = ECharacterState::EIdle;
 
-
+	// 대미지 입을시 이벤트 델리게이트	
+	UPROPERTY(BlueprintAssignable, Category = PL_Character)
+	FDelegateReceiveDamage_OneParam DelegateReceiveDamage_OneParam;
 
 
 
@@ -81,20 +83,30 @@ public:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+
+	// 액션 실행
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void PlayAction(FGameplayTag _actionTag);
-
+	
+	// 죽었을 때 이벤트
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
-	void DeadEvent();
+	virtual void DeadEvent();
 
+	// 가드 시작 이벤트
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void StartGuard();
 
+	// 가드 스탑 이벤트
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
 	void StopGuard();
+
+	// 대미지 받을시 이벤트 (Delegate 바인딩)
+	UFUNCTION(BlueprintNativeEvent, Category = PL)
+	void DamageReceiveEvent(class APLCharacter* _dealer);
+	virtual void DamageReceiveEvent_Implementation(class APLCharacter* _dealer);
 	
 
+	// 대미지 받을시 이벤트
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 

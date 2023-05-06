@@ -2,15 +2,21 @@
 
 
 #include "Character/PLAICharacter.h"
-
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "Animation/PLAnimationInstance.h"
 #include "Controller/PLAiController.h"
-#include "Kismet/KismetArrayLibrary.h"
-#include "Perception/AIPerceptionComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 APLAICharacter::APLAICharacter()
 {
 	AiPerceptionStimuliSourceComp = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AiperceptionStimuliSource"));
+	FarDistanceEffect_01 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect01"));
+	FarDistanceEffect_02 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect02"));
+
+	FarDistanceEffect_01->SetupAttachment(GetMesh());
+	FarDistanceEffect_02->SetupAttachment(GetMesh());
 }
 
 void APLAICharacter::BeginPlay()
@@ -19,11 +25,31 @@ void APLAICharacter::BeginPlay()
 
 	// 스킬 업데이트 타이머 
 	GetWorld()->GetTimerManager().SetTimer(AiSkillTimerHandle, this, &APLAICharacter::UpdateSkill, 0.1f, true);
+
+	// 플레이어와의 거리 체크 타이머 [플레이어의 빛 반경으로 들어와있는지 체크를 위해]
+	GetWorld()->GetTimerManager().SetTimer(CheckDistancePlayerTimerHandle, this, &APLAICharacter::CheckDistanceToPlayer, 0.5f, true);
 }
 
 void APLAICharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+}
+
+void APLAICharacter::DeadEvent()
+{
+	// 부모 함수 실행
+	Super::DeadEvent();
+
+	// 스킬 업데이트 타이머  해제
+	if(CheckDistancePlayerTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(CheckDistancePlayerTimerHandle);
+	}
+	// 플레이어와의 거리 체크 타이머 해제
+	if(AiSkillTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(AiSkillTimerHandle);
+	}
 }
 
 
@@ -55,6 +81,34 @@ void APLAICharacter::UpdateSkill()
 					SkillInfo[_randomSkillIndex].CurrentSkillColdTime = 0.0f;
 				}
 			}
+		}
+	}
+}
+
+void APLAICharacter::CheckDistanceToPlayer()
+{
+	// 플레이어와의 거리가 가깝다면, 이펙트 off
+	if(GetDistanceTo(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)) < 1000.0f)
+	{
+		if(FarDistanceEffect_01->IsActive())
+		{
+			FarDistanceEffect_01->Deactivate();
+		}
+		if(FarDistanceEffect_02->IsActive())
+		{
+			FarDistanceEffect_02->Deactivate();
+		}
+	}
+	// 플레이어와의 거리가 멀다면, 이펙트 on
+	else
+	{
+		if(FarDistanceEffect_01->IsActive() == false)
+		{
+			FarDistanceEffect_01->Activate();
+		}
+		if(FarDistanceEffect_02->IsActive()== false)
+		{
+			FarDistanceEffect_02->Activate();
 		}
 	}
 }

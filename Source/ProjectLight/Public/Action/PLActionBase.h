@@ -47,5 +47,5 @@ public:
 	/*실행 조건 검사*/
 	UFUNCTION(BlueprintNativeEvent, Category = PL)
 	bool CanExecuteAction(class APLCharacter* owner);
-	bool CanExecuteAction_Implementation(class APLCharacter* owner);
+	virtual bool CanExecuteAction_Implementation(class APLCharacter* owner);
 };

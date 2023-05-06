@@ -13,5 +13,7 @@ UCLASS()
 class PROJECTLIGHT_API UPLGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
+public:
 	
 };

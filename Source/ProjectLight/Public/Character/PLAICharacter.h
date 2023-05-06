@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Character/PLCharacter.h"
 #include "Interface/PLTargetableInterface.h"
-#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "PLAICharacter.generated.h"
 
 /**
@@ -18,7 +17,13 @@ class PROJECTLIGHT_API APLAICharacter : public APLCharacter, public IPLTargetabl
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
-	TObjectPtr<UAIPerceptionStimuliSourceComponent> AiPerceptionStimuliSourceComp;
+	TObjectPtr<class UAIPerceptionStimuliSourceComponent> AiPerceptionStimuliSourceComp;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	TObjectPtr<class UNiagaraComponent> FarDistanceEffect_01;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	TObjectPtr<class UNiagaraComponent> FarDistanceEffect_02;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TArray<FAiCharacterSkillInfo> SkillInfo;
@@ -33,14 +38,23 @@ private:
 	UPROPERTY()
 	FTimerHandle AiSkillTimerHandle;
 
+	// 플레이어와의 거리 체크 타이머
+	UPROPERTY()
+	FTimerHandle CheckDistancePlayerTimerHandle;
+
 public:
 	APLAICharacter();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void DeadEvent() override;
 
 	// 스킬 관련 타이머 함수
 	UFUNCTION()
 	void UpdateSkill();
+
+	// 플레이어와의 거리 체크 타이머 함수
+	UFUNCTION()
+	void CheckDistanceToPlayer();
 
 	// 스킬 쿨타임 계산 [초당]
 	UFUNCTION()

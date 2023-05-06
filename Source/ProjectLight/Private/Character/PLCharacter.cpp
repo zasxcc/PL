@@ -27,6 +27,9 @@ APLCharacter::APLCharacter()
 void APLCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 대미지 받을 시 이벤트 바인딩
+	DelegateReceiveDamage_OneParam.AddUniqueDynamic(this, &APLCharacter::DamageReceiveEvent);
 }
 
 // Called every frame
@@ -96,6 +99,12 @@ void APLCharacter::StopGuard()
 	SetIsGuard(false);
 	SetIsParry(false);
 	GetWorld()->GetTimerManager().ClearTimer(ParryTimerHandle);;
+}
+
+
+void APLCharacter::DamageReceiveEvent_Implementation(APLCharacter* _dealer)
+{
+	// 대미지 받을시 이벤트
 }
 
 float APLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

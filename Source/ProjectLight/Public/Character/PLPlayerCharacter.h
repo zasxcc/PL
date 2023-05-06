@@ -25,6 +25,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
 	TObjectPtr<class UPLTargetingComponent> TargetingComp;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
+	TObjectPtr<class USpotLightComponent> SpotLightComponent;
+
 	
 public:
 
@@ -32,6 +35,7 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void DeadEvent() override;
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
