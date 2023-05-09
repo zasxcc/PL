@@ -15,7 +15,7 @@ class PROJECTLIGHT_API APLPlayerCharacter : public APLCharacter
 {
 	GENERATED_BODY()
 	
-public:
+protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
 	TObjectPtr<class UCameraComponent> CameraComp;
 
@@ -58,6 +58,11 @@ public:
 	class APLPlayerController* GetPLPlayerController() 
 	{
 		return Cast<APLPlayerController>(GetLocalViewingPlayerController());
+	}
+	UFUNCTION(BlueprintPure, Category=PL)
+	class UPLTargetingComponent* GetTargetingComponent()
+	{
+		return TargetingComp;
 	}
 	
 };

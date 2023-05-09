@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "ProjectLightGameModeBase.h"
+#include "Game/ProjectLightGameModeBase.h"
 
 #include "Components/PLTeamManagerComponent.h"
 

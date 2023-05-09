@@ -28,13 +28,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TObjectPtr<class UWidgetComponent> EnemyUIWidgetComp;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
-	TArray<FAiCharacterSkillInfo> SkillInfo;
+
 
 protected:
 	// 현재 타겟팅한 적
 	UPROPERTY(BlueprintReadWrite, Category=PL_Character)
 	TObjectPtr<APLCharacter> CurrentTargetCharacter;
+
+	// Ai 스킬 정보
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	TArray<FAiCharacterSkillInfo> SkillInfo;
 
 private:
 	// 스킬 관련 타이머
@@ -50,6 +53,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void DeadEvent() override;
+
+	
 	virtual void BecomeTargetEvent() override;
 	virtual void BecomeNonTargetEvent() override;
 

@@ -234,14 +234,17 @@ void UPLCollisionTraceComponent::UpdateCollisionTrace()
 										{
 											UNiagaraSystem* _playEffect = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlayEffect;
 											USoundBase* _playSound = CollisionTraceInfo[_collisionTrace.Key].DamageInfo.PlayEffectAndSound[_hitRes.PhysMaterial.Get()->SurfaceType].PlaySound;
+											// 파티클 출력
 											if(_playEffect)
 											{
 												UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _playEffect, _hitRes.Location, _hitRes.ImpactNormal.Rotation());
 											}
+											// 사운드 출력
 											if(_playSound)
 											{
 												UGameplayStatics::PlaySoundAtLocation(GetOwner(), _playSound, _hitRes.Location);
 											}
+											// 카메라 쉐이크
 											if(CollisionTraceInfo[_collisionTrace.Key].DamageInfo.CameShake)
 											{
 												UGameplayStatics::PlayWorldCameraShake(GetWorld(), CollisionTraceInfo[_collisionTrace.Key].DamageInfo.CameShake, _hitRes.Location, 0.0f, 3000.0f);

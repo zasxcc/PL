@@ -38,13 +38,13 @@ void UPLAnimationInstance::NativeUpdateAnimation(float DeltaSeconds)
 			IsMove = false;
 		}
 
-		//Update Velocity, CharacterSpeed, NormalizedSpeed, Rotation 
+		// Update Velocity, CharacterSpeed, NormalizedSpeed, Rotation 
 		Velocity = GetOwnerPLCharacter()->GetVelocity();
 		CharacterSpeed = Velocity.Size();
 		NormalizedSpeed = CharacterSpeed / GetOwnerPLCharacter()->GetCharacterMovement()->GetMaxSpeed();
 		Rotation = GetOwnerPLCharacter()->GetActorRotation();
 
-		//Update Direction
+		// Update Direction
 		if (!Velocity.IsNearlyZero())
 		{
 			const FMatrix RotMatrix = FRotationMatrix(Rotation);

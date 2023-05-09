@@ -116,12 +116,15 @@ void UPLTargetingComponent::ActivateTargeting()
 	PopulatePotentialTargetsArray();
 
 	AActor* _currentTarget = nullptr;
-	FVector _cameraForwardVector = UKismetMathLibrary::GetForwardVector(UGameplayStatics::GetPlayerCameraManager(GetOwner(),0)->GetCameraRotation());
+	FVector _cameraForwardVector = UKismetMathLibrary::GetForwardVector(
+		UGameplayStatics::GetPlayerCameraManager(GetOwner(),0)->GetCameraRotation()
+		);
 
 	_cameraForwardVector.Z = 0;
 	_cameraForwardVector = _cameraForwardVector.GetSafeNormal();
 	float _maxDistance = 2000.0f + 100.0f;
-	
+
+	// 타겟팅 가능한 오브젝트들 중 각도가 카메라가 바라보는 각도와 차이가 70도 이하이고, 거리가 가장 가까운 엑터를 타겟팅
 	for(AActor* _target : AvailableTargetArray)
 	{
 		float distance = _target->GetDistanceTo(GetOwner());
@@ -144,11 +147,14 @@ void UPLTargetingComponent::ActivateTargeting()
 void UPLTargetingComponent::PopulatePotentialTargetsArray()
 {
 	AvailableTargetArray.Empty();
-	TArray<AActor*> ignoredActorArray;
+	const TArray<AActor*> ignoredActorArray;
 	
 	UKismetSystemLibrary::SphereOverlapActors(this, GetOwner()->GetActorLocation(),
-			2000.0f, ObjectsToQuery, AActor::StaticClass(), ignoredActorArray, AvailableTargetArray);
-
+			2000.0f,
+			ObjectsToQuery, AActor::StaticClass(),
+			ignoredActorArray,
+			AvailableTargetArray);
+	
 	//Attach 되어 있는 엑터 삭제
 	for(int i = 0; i < AvailableTargetArray.Num(); ++i)
 	{
@@ -157,7 +163,6 @@ void UPLTargetingComponent::PopulatePotentialTargetsArray()
 			return _target->GetAttachParentActor() != nullptr;
 		});
 	}
-
 	// interface 검사
 	for(int i = 0; i < AvailableTargetArray.Num(); ++i)
 	{
@@ -166,8 +171,6 @@ void UPLTargetingComponent::PopulatePotentialTargetsArray()
 			AvailableTargetArray.RemoveAt(i);
 		}
 	}
-
-	
 }
 
 

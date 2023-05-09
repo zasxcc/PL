@@ -15,7 +15,17 @@ class PROJECTLIGHT_API APLPlayerController : public APlayerController, public IG
 {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY()
+	TObjectPtr<class APLPlayerCharacter> PlayerCharacter;
+
 protected:
+	UPROPERTY( BlueprintReadWrite, Category = PL_Character)
+	bool TurnRight = false;
+
+	UPROPERTY( BlueprintReadWrite, Category = PL_Character)
+	bool TurnLeft = false;
+	
 	UPROPERTY( BlueprintReadWrite, Category = PL_Character)
 	bool EnableAttack = true;
 
@@ -37,6 +47,9 @@ public:
 	virtual void BeginPlay() override;
 	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
+
+	UFUNCTION(BlueprintCallable, Category=PL_Character)
+	void TurnInPlace();
 
 	// 팀 등록
 	UFUNCTION(BlueprintCallable, Category=PL_Character)
@@ -78,5 +91,8 @@ public:
 	{
 		EnableDodge = _isEnable;
 	}
+
+	UFUNCTION(BlueprintPure, Category=PL_Character)
+	class APLPlayerCharacter* GetPLPlayerCharacter();
 	//////////////////////////////
 };

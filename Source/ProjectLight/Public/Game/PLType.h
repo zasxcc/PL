@@ -53,13 +53,10 @@ struct FTeamInfo : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY( BlueprintReadWrite,EditAnywhere, Category = ACF)
-	FText DisplayName;
-
-	UPROPERTY( BlueprintReadWrite, EditAnywhere,Category = ACF)
+	UPROPERTY( BlueprintReadWrite, EditAnywhere,Category = PL_Team)
 	TMap<ETeam, TEnumAsByte<ETeamAttitude::Type>> Relationship;
 
-	UPROPERTY( BlueprintReadWrite,EditAnywhere, Category = ACF)
+	UPROPERTY( BlueprintReadWrite,EditAnywhere, Category = PL_Team)
 	TEnumAsByte<ECollisionChannel> CollisionChannel = ECollisionChannel::ECC_Pawn;
 };
 
@@ -212,7 +209,7 @@ public:
 	TArray<TEnumAsByte<ECollisionChannel>> CollisionChannels;
 
 	//콜리전 활성화 여부
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = PL_Collision)
+	UPROPERTY(BlueprintReadWrite, Category = PL_Collision)
 	bool bIsActivateCollision = false;
 
 	//대미지 정보
