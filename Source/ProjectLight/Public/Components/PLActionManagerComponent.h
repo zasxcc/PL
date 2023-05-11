@@ -21,9 +21,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category=PL)
 	class UPLActionBase* CurrentAction;
 
-	UPROPERTY(BlueprintReadWrite, Category=PL)
-	FPlayActionInfo StoredActionInfo;
-
 private:
 	UPROPERTY()
 	class APLCharacter* OwnerCharacter;

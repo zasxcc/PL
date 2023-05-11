@@ -40,7 +40,7 @@ private:
 public:
 	// 포인트 라이트 깜빡임 셋
 	UFUNCTION(BlueprintCallable)
-	void SetFlickeringLight_Flicker(float _time, float _flickerInterval);
+	void SetFlickeringLight_Flicker(float _time, float _flickerInterval, FName _attachSockName, FTransform _attachOffset);
 
 	// 포인트 라이트 깜빡임 정지
 	UFUNCTION(BlueprintCallable)

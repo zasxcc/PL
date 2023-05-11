@@ -93,16 +93,18 @@ void UPLStatisticComponent::ModifyStat(FGameplayTag _modifyStat, float _addValue
 {
 	if(CharacterStat.Contains(_modifyStat))
 	{
+		// 스텟 Modify
 		CharacterStat[_modifyStat].Value += _addValue;
-		
+
+		// 스텟이 리젠되는 값이라면, 리젠되는 딜레이를 줄것인가
 		if(_applyRegenDelay)
 		{
 			CharacterStat[_modifyStat].CurrentRegenDelay = 0.0f;
 		}
 		
-		//수정한 값이 최댓값보다 크다면 최댓값으로 (-1은 최댓값의 한계가 없는 스텟)
+		// 수정한 값이 최댓값보다 크다면 최댓값으로 (NoLimitStat = -1은 최댓값의 한계가 없는 스텟)
 		if(CharacterStat[_modifyStat].Value >= CharacterStat[_modifyStat].MaxValue &&
-			CharacterStat[_modifyStat].MaxValue  != -1)
+			CharacterStat[_modifyStat].MaxValue != -1)
 		{
 			CharacterStat[_modifyStat].Value = CharacterStat[_modifyStat].MaxValue;
 		}

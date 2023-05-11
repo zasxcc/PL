@@ -35,13 +35,17 @@ void APLBossCharacter::BecomeNonTargetEvent()
 	//Super::BecomeNonTargetEvent();
 }
 
-void APLBossCharacter::SetFlickeringLight_Flicker(float _time, float _flickerInterval)
+void APLBossCharacter::SetFlickeringLight_Flicker(float _time, float _flickerInterval, FName _attachSockName, FTransform _attachOffset)
 {
-	//이미 타이머가 진행중이면 클리어
+	// 이미 타이머가 진행중이면 클리어
 	if(FlickerIntervalTimer.IsValid())
 	{
 		GetWorldTimerManager().ClearTimer(FlickerIntervalTimer);
 	}
+
+	// 플리커 라이트 어테치
+	FlickeringPointLightComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, _attachSockName);
+	FlickeringPointLightComponent->SetRelativeTransform(_attachOffset);
 
 	// 포인트 라이트 깜빡임 타이머 셋
 	GetWorld()->GetTimerManager().SetTimer(FlickerIntervalTimer, this, &APLBossCharacter::LightFlicker, _flickerInterval, true);

@@ -44,15 +44,16 @@ void APLCharacter::PlayAction(FGameplayTag _actionTag)
 {
 	if(ActionInfo.Contains(_actionTag))
 	{
-		// StoredActionInfo에 재생할 Action과 Montage 저장 
-		ActionManagerComponent->StoredActionInfo = ActionInfo[_actionTag];
-
 		// ExecuteAction 실행 성공여부 
-		const bool _isExecute =  ActionManagerComponent->ExecuteAction(ActionInfo[_actionTag].PlayAction);
-		
+		const bool _isExecute =  GetPLActionComponent()->ExecuteAction(ActionInfo[_actionTag].PlayAction);
+
+		// ExecuteAction이 실행에 성공하고 CurrentAction이 nullptr이 아니라면
 		if(GetPLActionComponent()->CurrentAction && _isExecute)
 		{
+			// 몽타주 파일에서 재생할 SectionName 
 			const FName _montageSectionName = GetPLActionComponent()->CurrentAction->GetMontageSectionName();
+
+			// 몽타주 재생
 			PlayAnimMontage(ActionInfo[_actionTag].PlayMontage, 1.0f, _montageSectionName);
 		}
 	}

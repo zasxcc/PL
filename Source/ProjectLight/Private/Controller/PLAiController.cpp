@@ -5,7 +5,11 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/PLAICharacter.h"
+#include "Components/PLTeamManagerComponent.h"
+#include "Controller/PLPlayerController.h"
+#include "Game/ProjectLightGameModeBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 
@@ -60,7 +64,39 @@ void APLAiController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn)
 // 팀 별 관계 설정
 ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other) const
 {
-	if (APawn const* OtherPawn = Cast<APawn>(&Other))
+	// Other 엑터가 PLCharacter 일 경우
+	if(const APLCharacter* _otherPlCharacter = Cast<APLCharacter>(&Other))
+	{
+		const UPLTeamManagerComponent* _teamManagerComp = Cast<AProjectLightGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->TeamManagerComponent;
+		const APLAiController* _otherPlCharacterController = Cast<APLAiController>(_otherPlCharacter->GetController());
+		const APLPlayerController* _playerController = Cast<APLPlayerController>(_otherPlCharacter->GetController());
+
+		// Other가 AiCharacter일 경우
+		if(IsValid(_teamManagerComp) && IsValid(_otherPlCharacterController))
+		{
+			if(_teamManagerComp->IsEnemyTeam(CharacterTeam, _otherPlCharacterController->CharacterTeam))
+			{
+				return ETeamAttitude::Hostile;
+			}
+			return ETeamAttitude::Friendly;
+			
+		}
+		// Other가 플레이어 캐릭터일 경우
+		if(IsValid(_teamManagerComp) && IsValid(_playerController))
+		{
+			if(_teamManagerComp->IsEnemyTeam(CharacterTeam, _playerController->CharacterTeam))
+			{
+				return ETeamAttitude::Hostile;
+			}
+			return ETeamAttitude::Friendly;
+		}
+
+		return ETeamAttitude::Friendly;
+		
+	}
+
+	// Other 엑터가 PLCharacter가 아니고 Pawn 일 경우,
+	else if ( const APawn* OtherPawn = Cast<APawn>(&Other))
 	{
 		if (auto const OtherTeamAgent = Cast<IGenericTeamAgentInterface>(OtherPawn->GetController()))
 		{
@@ -74,10 +110,7 @@ ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other)
 				{
 					return ETeamAttitude::Neutral;
 				}
-				else 
-				{
-					return ETeamAttitude::Hostile;
-				}
+				return ETeamAttitude::Hostile;
 			}
 			if (OtherTeamAgent->GetGenericTeamId() == GetGenericTeamId()) 
 			{
@@ -87,10 +120,8 @@ ETeamAttitude::Type APLAiController::GetTeamAttitudeTowards(const AActor& Other)
 			{
 				return ETeamAttitude::Neutral;
 			}
-			else 
-			{
-				return ETeamAttitude::Hostile;
-			}
+
+			return ETeamAttitude::Hostile;
 		}
 	}
 	return ETeamAttitude::Neutral;

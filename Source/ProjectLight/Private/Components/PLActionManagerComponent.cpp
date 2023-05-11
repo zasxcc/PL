@@ -18,18 +18,28 @@ UPLActionManagerComponent::UPLActionManagerComponent()
 }
 
 
+
 // Called when the game starts
 void UPLActionManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerCharacter = Cast<APLCharacter>(GetOwner());
 	// ...
-	
+
+	UPLAnimationInstance* _animInstance = Cast<UPLAnimationInstance>(GetPLOwnerCharacter()->GetPLAnimationInstance());
+
+	if(_animInstance)
+	{
+		_animInstance->OnMontageStarted.AddDynamic(this, &UPLActionManagerComponent::HandleMontageStarted);
+		_animInstance->OnMontageEnded.AddDynamic(this, &UPLActionManagerComponent::HandleMontageFinished);
+		_animInstance->OnMontageBlendingOut.AddDynamic(this, &UPLActionManagerComponent::HandleMontageBlendingOut);
+	}
 }
 
 
 // Called every frame
-void UPLActionManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPLActionManagerComponent::TickComponent(float DeltaTime,
+			ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -59,20 +69,6 @@ bool UPLActionManagerComponent::ExecuteAction(UPLActionBase* _executeAction)
 		
 		CurrentAction->OwnerCharacter = OwnerCharacter;
 		CurrentAction->OnActionStarted();
-	}
-	UPLAnimationInstance* _animInstance = Cast<UPLAnimationInstance>(GetPLOwnerCharacter()->GetPLAnimationInstance());
-
-	if(GetPLOwnerCharacter()->GetPLAnimationInstance())
-	{
-		// 몽타주 Delegate 초기화
-		GetPLOwnerCharacter()->GetPLAnimationInstance()->OnMontageStarted.Clear();
-		GetPLOwnerCharacter()->GetPLAnimationInstance()->OnMontageBlendingOut.Clear();
-		GetPLOwnerCharacter()->GetPLAnimationInstance()->OnMontageEnded.Clear();
-
-		// 몽타주 Delegate 재세팅
-		_animInstance->OnMontageStarted.AddDynamic(this, &UPLActionManagerComponent::HandleMontageStarted);
-		_animInstance->OnMontageEnded.AddDynamic(this, &UPLActionManagerComponent::HandleMontageFinished);
-		_animInstance->OnMontageBlendingOut.AddDynamic(this, &UPLActionManagerComponent::HandleMontageBlendingOut);
 
 		return true;
 	}

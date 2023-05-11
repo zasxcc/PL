@@ -13,7 +13,6 @@
 #define STAT_Stamina FGameplayTag::RequestGameplayTag("Stat.Stamina")
 #define STAT_HitGage FGameplayTag::RequestGameplayTag("Stat.HitGage")
 
-
 //방향 Enum
 UENUM(BlueprintType)
 enum class EDirection : uint8
