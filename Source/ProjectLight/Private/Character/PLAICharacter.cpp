@@ -2,10 +2,10 @@
 
 
 #include "Character/PLAICharacter.h"
+
+#include "ActorOptimizeSubjectComponent.h"
 #include "NiagaraComponent.h"
-#include "NiagaraSystem.h"
 #include "Animation/PLAnimationInstance.h"
-#include "Components/Widget.h"
 #include "Components/WidgetComponent.h"
 #include "Controller/PLAiController.h"
 #include "Kismet/GameplayStatics.h"
@@ -18,6 +18,7 @@ APLAICharacter::APLAICharacter()
 	FarDistanceEffect_01 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect01"));
 	FarDistanceEffect_02 = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraEffect02"));
 	EnemyUIWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComp"));
+	OptimizeSubjectComponent = CreateDefaultSubobject<UActorOptimizeSubjectComponent>(TEXT("OptimizeSubjectComp"));
 	
 	FarDistanceEffect_01->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "head");
 	FarDistanceEffect_02->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, "head");

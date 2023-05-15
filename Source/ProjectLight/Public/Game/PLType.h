@@ -66,7 +66,7 @@ struct FPLStatDetail : public FTableRowBase
 	GENERATED_BODY()
 public:
 	FPLStatDetail()
-	{};
+	{}
 	
 	// 스텟의 최댓값, -1이라면 최댓값이 없음
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL)

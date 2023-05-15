@@ -27,6 +27,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
 	TObjectPtr<class UWidgetComponent> EnemyUIWidgetComp;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_AiCharacter)
+	TObjectPtr<class UActorOptimizeSubjectComponent> OptimizeSubjectComponent;
 	
 
 

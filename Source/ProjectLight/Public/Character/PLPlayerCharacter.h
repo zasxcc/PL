@@ -27,6 +27,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=PL_Character)
 	TObjectPtr<class USpotLightComponent> SpotLightComponent;
+	
 
 	
 public:
